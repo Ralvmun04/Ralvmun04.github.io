@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wired // System Status</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #050505;
+            color: #00ff66;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 700px;
+            border: 1px dashed #00ff66;
+            padding: 30px;
+            background: rgba(0, 255, 102, 0.03);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.1);
+        }
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            border-bottom: 1px solid #00ff66;
+            padding-bottom: 10px;
+            letter-spacing: 2px;
+        }
+        .status-ok {
+            color: #00ff66;
+            font-weight: bold;
+        }
+        .quote {
+            color: #88c0d0;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: #4c566a;
+            border-top: 1px dotted #4c566a;
+            padding-top: 10px;
+        }        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 99999;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>[ SYSTEM BOOT // GITHUB.IO ]</h1>
+        <p>Estado del Servidor: <span class="status-ok">OPERATIVO (Sincronización 400%)</span></p>
+        
+        <p>Si estás viendo esta interfaz, la conexión con la <strong>Wired</strong> se ha establecido correctamente y el despliegue automático ha funcionado.</p>
+
+        <h3>&gt; Intereses en Carga:</h3>
+        <ul>
+            <li><strong>Protocolo Lain:</strong> Conectados a la red, aunque el cuerpo físico sea solo temporal.</li>
+            <li><strong>Sincronización EVA:</strong> Pruebas de despliegue superadas sin entrar en bucle de pánico (Modo Berserk evitado).</li>
+            <li><strong>Bucle Re:Zero:</strong> Fallar, compilar de nuevo y reiniciar desde el <em>checkpoint</em> hasta que funcione.</li>
+        </ul>
+
+        <div class="quote">
+            "No importa dónde estés, todos estamos conectados... incluso en GitHub Pages."
+        </div>
+
+        <div class="footer">
+            &gt; Próximo paso: Editar este archivo index.html para construir el blog definitivo.
+        </div>
+    </div>
+
+</body>
+</html>
