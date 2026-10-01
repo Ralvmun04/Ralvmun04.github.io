@@ -4,39 +4,82 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wired // System Status</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="lain.png">    
-    
-    <!-- Tipografía -->
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    
-    <!-- Enlace al archivo CSS externo -->
+    <link rel="icon" type="image/png" href="lain.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>[ SYSTEM BOOT // GITHUB.IO ]</h1>
-        <p>Estado del Servidor: <span class="status-ok">OPERATIVO (Sincronización 400%)</span></p>
-        
-        <p>Si estás viendo esta interfaz, la conexión con la <strong>Wired</strong> se ha establecido correctamente y el despliegue automático ha funcionado.</p>
-
-        <h3>&gt; Intereses en Carga:</h3>
-        <ul>
-            <li><strong>Protocolo Lain:</strong> Conectados a la red, aunque el cuerpo físico sea solo temporal.</li>
-            <li><strong>Sincronización EVA:</strong> Pruebas de despliegue superadas sin entrar en bucle de pánico (Modo Berserk evitado).</li>
-            <li><strong>Bucle Re:Zero:</strong> Fallar, compilar de nuevo y reiniciar desde el <em>checkpoint</em> hasta que funcione.</li>
-        </ul>
-
-        <div class="quote">
-            "No importa dónde estés, todos estamos conectados... incluso en GitHub Pages."
+    <!-- Navegación Superior -->
+    <nav class="nav-bar">
+        <div class="nav-links">
+            <a href="#" class="active">/home</a>
+            <a href="#">/projects</a>
+            <a href="#">/about</a>
+            <a href="#">/logs</a>
         </div>
-
-        <div class="footer">
-            &gt; Estructura modular completada: HTML y CSS separados con éxito.
+        <div class="nav-status">
+            <span class="status-dot"></span> WIRED_NODE
         </div>
-    </div>
+    </nav>
+
+    <main class="main-container">
+        <header class="hero-card">
+            <p class="term-prompt">&gt; [SYSTEM BOOT] Ralvmun04@github.io</p>
+            <h1>Hello, World!</h1>
+            <p class="status-text">Status: <span class="highlight">CONNECTED</span> (Sincronización 400%)</p>
+            <blockquote class="quote">
+                "No importa dónde estés, todos estamos conectados."
+            </blockquote>
+        </header>
+
+        <section class="grid-layout">
+            
+            <div class="column">
+                <h2 class="section-title">&gt; ÁREAS DE INTERÉS</h2>
+                
+                <div class="feature-card">
+                    <h3>// Protocolo Lain</h3>
+                    <p>Arquitectura de software, redes y la frontera entre lo físico y lo digital.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>// Sincronización EVA</h3>
+                    <p>Despliegues, rendimiento y mantención del flujo.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>// Bucle</h3>
+                    <p>Depuración iterativa: fallar, checkpoint y compilar de nuevo.</p>
+                </div>
+            </div>
+
+            <div class="column">
+                <h2 class="section-title">&gt; ÚLTIMOS LOGS</h2>
+                
+                <ul class="log-list">
+                    <li>
+                        <span class="log-date">[2026-09-30]</span>
+                        <a href="#">Pwnable Labs</a>
+                    </li>
+                    <li>
+                        <span class="log-date">[2026-09-29]</span>
+                        <a href="#">Paginas Web</a>
+                    </li>
+                    <li>
+                        <span class="log-date">[2026-09-28]</span>
+                        <a href="#">DockerLabs</a>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <p>&gt; Conectado a la Red // v0.1.0</p>
+    </footer>
 
 </body>
 </html>
