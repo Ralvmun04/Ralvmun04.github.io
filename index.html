@@ -12,14 +12,19 @@
 
     <!-- Navegación Superior -->
     <nav class="nav-bar">
-        <div class="nav-links">
+        <div class="nav-header">
+            <div class="nav-status">
+                <span class="status-dot"></span> WIRED_NODE
+            </div>
+            <!-- Botón desplegable para móvil -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">&gt; MENU [≡]</button>
+        </div>
+
+        <div class="nav-links" id="navLinks">
             <a href="#" class="active">/home</a>
             <a href="#">/projects</a>
             <a href="#">/about</a>
-            <a href="#">/repos</a>
-        </div>
-        <div class="nav-status">
-            <span class="status-dot"></span> WIRED_NODE
+            <a href="#">/logs</a>
         </div>
     </nav>
 
@@ -39,7 +44,7 @@
                 <h2 class="section-title">&gt; ÁREAS DE INTERÉS</h2>
                 
                 <div class="feature-card">
-                    <h3>// Protocolo Lain</h3>
+                    <h3>// Protocolo LAIN</h3>
                     <p>Arquitectura de software, redes y la frontera entre lo físico y lo digital.</p>
                 </div>
 
@@ -56,19 +61,22 @@
 
             <div class="column">
                 <h2 class="section-title">&gt; MIS REPOSITORIOS</h2>
-                
+    
                 <ul class="log-list">
                     <li>
                         <span class="log-date">[ACTUALIZANDO...]</span>
-                        <a href="https://github.com/Ralvmun04/pwnable-labs">Pwnable Labs</a>
+                        <a href="https://github.com/Ralvmun04/pwnable-labs" target="_blank">Pwnable Labs</a>
+                        <span class="repo-desc">// Explotación de binarios & Pwn</span>
                     </li>
                     <li>
                         <span class="log-date">[2025-06-13]</span>
-                        <a href="https://github.com/Ralvmun04/TFG_NEXO">NEXO TFG</a>
+                        <a href="https://github.com/Ralvmun04/TFG_NEXO" target="_blank">NEXO TFG</a>
+                        <span class="repo-desc">// Proyecto Fin de Grado</span>
                     </li>
                     <li>
                         <span class="log-date">[2026-05-29]</span>
-                        <a href="https://github.com/Ralvmun04/Dockerlab-Inj3ct0rss-Resolution-">DockerLabs Inj3ct0rss Writeup</a>
+                        <a href="https://github.com/Ralvmun04/Dockerlab-Inj3ct0rss-Resolution-" target="_blank">DockerLabs Inj3ct0rss Writeup</a>
+                        <span class="repo-desc">// Hacking ético & Resolución de máquina</span>
                     </li>
                 </ul>
             </div>
@@ -76,10 +84,23 @@
         </section>
     </main>
 
-    <!-- Pie de página -->
     <footer class="footer">
-        <p>&gt; Conectado a la Red // v0.1.0</p>
+        <p class="footer-status">&gt; Conectado a la Red // v0.1.0</p>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/rafael-%C3%A1lvarez-mu%C3%B1oz-39211132b" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/Ralvmun04" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="mailto:rafa004drgb@gmail.com">Contacto</a>
+        </div>
     </footer>
+
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+    </script>
 
 </body>
 </html>
