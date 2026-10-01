@@ -1,0 +1,68 @@
+/* style.css */
+body {
+    background-color: #050505;
+    color: #00ff66;
+    font-family: 'Share Tech Mono', monospace;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 700px;
+    border: 1px dashed #00ff66;
+    padding: 30px;
+    background: rgba(0, 255, 102, 0.03);
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.1);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    border-bottom: 1px solid #00ff66;
+    padding-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.status-ok {
+    color: #00ff66;
+    font-weight: bold;
+}
+
+.quote {
+    color: #88c0d0;
+    margin: 20px 0;
+    font-style: italic;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    margin: 8px 0;
+}
+
+.footer {
+    margin-top: 30px;
+    font-size: 0.85rem;
+    color: #4c566a;
+    border-top: 1px dotted #4c566a;
+    padding-top: 10px;
+}
+
+/* Efecto scanline sutil */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 99999;
+    pointer-events: none;
+}
