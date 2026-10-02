@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wired // Logs & Blog</title>
+    
+    <!-- Favicon y Tipografía -->
+    <link rel="icon" type="image/png" href="lain.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navegación Superior -->
+    <nav class="nav-bar">
+        <div class="nav-header">
+            <div class="nav-status">
+                <span class="status-dot"></span> WIRED_NODE
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">&gt; MENU [≡]</button>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">/home</a>
+            <a href="index.html#repos">/repos</a>
+            <a href="blog.html" class="active">/blog</a>
+            <a href="index.html#webs">/webs</a>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <!-- Banner del Blog -->
+        <header class="hero-card">
+            <p class="term-prompt">&gt; [DIRECTORY] /var/log/wired_notes</p>
+            <h1>Wired Logs & Writeups</h1>
+            <p class="status-text">Bitácora de desarrollo, notas sobre hacking ético y anotaciones técnicas.</p>
+        </header>
+
+        <!-- Filtro de Categorías -->
+        <div class="blog-tags-nav">
+            <span class="tag-label">&gt; FILTRAR:</span>
+            <a href="#" class="blog-tag active">/all</a>
+            <a href="#" class="blog-tag">/writeups</a>
+            <a href="#" class="blog-tag">/development</a>
+            <a href="#" class="blog-tag">/cybersec</a>
+        </div>
+
+        <!-- Lista de Entradas del Blog -->
+        <section class="blog-list">
+
+            <!-- Entrada 1 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="blog-date">[2026-10-02]</span>
+                    <span class="status-tag dev">WRITEUP</span>
+                </div>
+                <h2><a href="#" class="blog-title">Resolución de máquina DockerLabs: Inj3ct0rss</a></h2>
+                <p class="blog-snippet">
+                    Análisis paso a paso sobre la explotación de la vulnerabilidad de inyección, escalada de privilegios y persistencia en el contenedor.
+                </p>
+
+                <!-- Área expandible o contenido directo -->
+                <div class="blog-content">
+                    <p>
+                        Para comenzar con el reconocimiento de la máquina, realizamos un escaneo de puertos básico con <code>nmap</code>:
+                    </p>
+                    <pre class="code-block"><code>nmap -sCV -p- --min-rate 5000 10.10.10.X -oN target_scan</code></pre>
+                    <p>
+                        Tras identificar los servicios abiertos, procedemos a fuzzear los directorios web principales en busca de parámetros vulnerables...
+                    </p>
+                </div>
+                <div class="blog-footer-link">
+                    <a href="#" class="read-more">&gt; Leer artículo completo [RAW_LOG]</a>
+                </div>
+            </article>
+
+            <!-- Entrada 2 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="blog-date">[2026-09-28]</span>
+                    <span class="status-tag live">DEV</span>
+                </div>
+                <h2><a href="#" class="blog-title">Construyendo una terminal web retro con HTML y CSS</a></h2>
+                <p class="blog-snippet">
+                    Reflexiones sobre la creación de interfaces cyberpunk y el equilibrio entre estética hacker, contraste accesible y rendimiento en GitHub Pages.
+                </p>
+            </article>
+
+            <!-- Entrada 3 -->
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="blog-date">[2026-05-28]</span>
+                    <span class="status-tag live">TOOLS</span>
+                </div>
+                <h2><a href="#" class="blog-title">Extracción automatizada de metadatos con Python</a></h2>
+                <p class="blog-snippet">
+                    Breve nota sobre cómo funciona el script Multi-Format Metadata Extractor y los principales módulos utilizados para analizar archivos multimedia.
+                </p>
+            </article>
+
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <p class="footer-status">&gt; Conectado a la Red desde San Fernando // v0.1.0</p>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/rafael-%C3%A1lvarez-mu%C3%B1oz-39211132b" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/Ralvmun04" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="mailto:rafa004drgb@gmail.com">Contacto</a>
+        </div>
+    </footer>
+
+    <!-- Script Menú Móvil -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+    </script>
+</body>
+</html>
