@@ -84,120 +84,120 @@
                         Tras bastante prueba y error, este ha sido el resultado. Espero que le deis la misma utilidad que le doy yo, y os animo a corregir o añadir lo que veáis necesario:
                     </p>
 
-                        <pre class="code-block"><code>#!/bin/bash
+<pre class="code-block"><code>#!/bin/bash
 
-                        # Creamos un nombre de carpeta único con fecha y hora
-                        SESSION_DIR="recon_$(date +%Y%m%d_%H%M)"
-                        mkdir -p "$SESSION_DIR"
+# Creamos un nombre de carpeta único con fecha y hora
+SESSION_DIR="recon_$(date +%Y%m%d_%H%M)"
+mkdir -p "$SESSION_DIR"
 
-                        # Movemos la ejecución a esa carpeta para que todo lo que generen
-                        # las herramientas (subfinder, katana, etc.) caiga dentro automáticamente
-                        cd "$SESSION_DIR" || exit
+# Movemos la ejecución a esa carpeta para que todo lo que generen
+# las herramientas (subfinder, katana, etc.) caiga dentro automáticamente
+cd "$SESSION_DIR" || exit
 
-                        # Definimos el nombre del log
-                        LOG_FILE="recon_log_$(date +%Y%m%d_%H%M).log"
+# Definimos el nombre del log
+LOG_FILE="recon_log_$(date +%Y%m%d_%H%M).log"
 
-                        # Redirigimos toda la salida (pantalla y errores) al archivo y a la terminal
-                        exec > >(tee -a "$LOG_FILE") 2>&1
+# Redirigimos toda la salida (pantalla y errores) al archivo y a la terminal
+exec > >(tee -a "$LOG_FILE") 2>&1
 
-                        # Asegurar que el PATH de Go y binarios locales esté activo
-                        export PATH=$PATH:$(go env GOPATH)/bin
-                        export PATH=$PATH:/usr/local/bin
+# Asegurar que el PATH de Go y binarios locales esté activo
+export PATH=$PATH:$(go env GOPATH)/bin
+export PATH=$PATH:/usr/local/bin
 
-                        # Especificar Header / User-Agent personalizado
-                        MY_UA="User-Agent: BugBounty-Research (contact: tu_email@proton.me)"
+# Especificar Header / User-Agent personalizado
+MY_UA="User-Agent: BugBounty-Research (contact: tu_email@proton.me)"
 
-                        echo -e "\e[1;34m[*] ==========================================\e[0m"
-                        echo -e "\e[1;34m[*] INICIANDO RECON AUTOMATIZADO              \e[0m"
-                        echo -e "\e[1;34m[*] ==========================================\e[0m"
+echo -e "\e[1;34m[*] ==========================================\e[0m"
+echo -e "\e[1;34m[*] INICIANDO RECON AUTOMATIZADO              \e[0m"
+echo -e "\e[1;34m[*] ==========================================\e[0m"
 
-                        # Fase 1: Enumeración de Subdominios Pasivos
-                        echo -e "\n\e[1;33m[*] Fase 1: Recopilando subdominios pasivos con Subfinder...\e[0m"
-                        subfinder -dL ../scope.txt -o subf_subdomains.txt
+# Fase 1: Enumeración de Subdominios Pasivos
+echo -e "\n\e[1;33m[*] Fase 1: Recopilando subdominios pasivos con Subfinder...\e[0m"
+subfinder -dL ../scope.txt -o subf_subdomains.txt
 
-                        # Fase 2: Fuerza Bruta de Subdominios
-                        echo -e "\n\e[1;33m[*] Fase 2: Realizando fuerza bruta de subdominios con Puredns... \e[0m"
-                        puredns bruteforce /ruta/a/diccionarios/subdomains.txt ../scope.txt -r ../resolvers.txt > puredns_subdomains.txt
+# Fase 2: Fuerza Bruta de Subdominios
+echo -e "\n\e[1;33m[*] Fase 2: Realizando fuerza bruta de subdominios con Puredns... \e[0m"
+puredns bruteforce /ruta/a/diccionarios/subdomains.txt ../scope.txt -r ../resolvers.txt > puredns_subdomains.txt
 
-                        echo -e "\n\e[1;33m[*] Mezclando y unificando subdominios...\e[0m"
-                        cat subf_subdomains.txt puredns_subdomains.txt | sort -u > all_potential_subdomains.txt
-                        echo -e "\e[1;32m[✓] Total de subdominios únicos encontrados: $(wc -l < all_potential_subdomains.txt)\e[0m"
+echo -e "\n\e[1;33m[*] Mezclando y unificando subdominios...\e[0m"
+cat subf_subdomains.txt puredns_subdomains.txt | sort -u > all_potential_subdomains.txt
+echo -e "\e[1;32m[✓] Total de subdominios únicos encontrados: $(wc -l < all_potential_subdomains.txt)\e[0m"
 
-                        # Fase 3: Descubrimiento mediante certificados TLS
-                        echo -e "\n\e[1;33m[*] Buscando nombres en certificados TLS con TLSX...\e[0m"
-                        cat all_potential_subdomains.txt | tlsx -san -silent | anew all_potential_subdomains.txt
+# Fase 3: Descubrimiento mediante certificados TLS
+echo -e "\n\e[1;33m[*] Buscando nombres en certificados TLS con TLSX...\e[0m"
+cat all_potential_subdomains.txt | tlsx -san -silent | anew all_potential_subdomains.txt
 
-                        # Fase 4: Filtrado de hosts vivos (Probing)
-                        echo -e "\n\e[1;33m[*] Fase 4: Validando subdominios activos con Httpx...\e[0m"
-                        cat all_potential_subdomains.txt | httpx -silent -H "$MY_UA" -o alive_subdomains.txt
-                        echo -e "\e[1;32m[✓] Total de subdominios vivos respondiendo HTTP/HTTPS: $(wc -l < alive_subdomains.txt)\e[0m"
+# Fase 4: Filtrado de hosts vivos (Probing)
+echo -e "\n\e[1;33m[*] Fase 4: Validando subdominios activos con Httpx...\e[0m"
+cat all_potential_subdomains.txt | httpx -silent -H "$MY_UA" -o alive_subdomains.txt
+echo -e "\e[1;32m[✓] Total de subdominios vivos respondiendo HTTP/HTTPS: $(wc -l < alive_subdomains.txt)\e[0m"
 
-                        # Capturas visuales opcionales con Aquatone
-                        echo -e "\n\e[1;33m[*] ¿Quieres llevar a cabo capturas de pantalla con Aquatone? (y/n) [n en 5 min]\e[0m"
-                        read -t 300 -r respuesta
+# Capturas visuales opcionales con Aquatone
+echo -e "\n\e[1;33m[*] ¿Quieres llevar a cabo capturas de pantalla con Aquatone? (y/n) [n en 5 min]\e[0m"
+read -t 300 -r respuesta
 
-                        if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
-                            mkdir -p aquatone_results
-                            cat alive_subdomains.txt | aquatone -out aquatone_results -threads 4 -screenshot-timeout 10000 -http-timeout 3000
-                            echo -e "\e[1;32m[+]\e[0m Capturas completadas. Reporte HTML en: aquatone_results/aquatone_report.html"
-                        else
-                            echo -e "[*] Saltando Aquatone por decisión del usuario."
-                        fi
+if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
+    mkdir -p aquatone_results
+    cat alive_subdomains.txt | aquatone -out aquatone_results -threads 4 -screenshot-timeout 10000 -http-timeout 3000
+    echo -e "\e[1;32m[+]\e[0m Capturas completadas. Reporte HTML en: aquatone_results/aquatone_report.html"
+else
+    echo -e "[*] Saltando Aquatone por decisión del usuario."
+fi
 
-                        # Fase 5: Crawling + Extracción de URLs (Pasivo y Activo)
-                        echo -e "\n\e[1;33m[*] Extrayendo URLs pasivas con Gau...\e[0m"
-                        cat alive_subdomains.txt | gau --threads 20 > urls_pasivas.txt
+# Fase 5: Crawling + Extracción de URLs (Pasivo y Activo)
+echo -e "\n\e[1;33m[*] Extrayendo URLs pasivas con Gau...\e[0m"
+cat alive_subdomains.txt | gau --threads 20 > urls_pasivas.txt
 
-                        echo -e "\n\e[1;33m[*] Mapeando la web activamente con Katana...\e[0m"
-                        katana -list alive_subdomains.txt -d 3 -jc -kf all -c 20 -H "$MY_UA" -silent -o urls_activas.txt
+echo -e "\n\e[1;33m[*] Mapeando la web activamente con Katana...\e[0m"
+katana -list alive_subdomains.txt -d 3 -jc -kf all -c 20 -H "$MY_UA" -silent -o urls_activas.txt
 
-                        echo -e "\n\e[1;33m[*] Unificando mapa completo de URLs...\e[0m"
-                        cat urls_pasivas.txt urls_activas.txt | sort -u > all_urls.txt
-                        cat all_urls.txt | unfurl keys | sort -u > lista_parametros.txt
-                        echo -e "\e[1;32m[✓] Total de URLs únicas para analizar: $(wc -l < all_urls.txt)\e[0m"
+echo -e "\n\e[1;33m[*] Unificando mapa completo de URLs...\e[0m"
+cat urls_pasivas.txt urls_activas.txt | sort -u > all_urls.txt
+cat all_urls.txt | unfurl keys | sort -u > lista_parametros.txt
+echo -e "\e[1;32m[✓] Total de URLs únicas para analizar: $(wc -l < all_urls.txt)\e[0m"
 
-                        # Fase 6: Clasificación de Endpoints con GF
-                        echo -e "\n\e[1;33m[*] Fase 6: Clasificando endpoints sospechosos con GF...\e[0m"
-                        cat all_urls.txt | gf sqli > sqli_endpoints.txt
-                        cat all_urls.txt | gf redirect > open_redirects.txt
-                        cat all_urls.txt | gf xss > xss_endpoints.txt
-                        cat all_urls.txt | gf idor > idor_endpoints.txt
+# Fase 6: Clasificación de Endpoints con GF
+echo -e "\n\e[1;33m[*] Fase 6: Clasificando endpoints sospechosos con GF...\e[0m"
+cat all_urls.txt | gf sqli > sqli_endpoints.txt
+cat all_urls.txt | gf redirect > open_redirects.txt
+cat all_urls.txt | gf xss > xss_endpoints.txt
+cat all_urls.txt | gf idor > idor_endpoints.txt
 
-                        echo -e "\e[1;32m[✓] Endpoints clasificados -> XSS: $(wc -l < xss_endpoints.txt) | SQLi: $(wc -l < sqli_endpoints.txt) | OpenRedirect: $(wc -l < open_redirects.txt) | IDOR: $(wc -l < idor_endpoints.txt)\e[0m"
+echo -e "\e[1;32m[✓] Endpoints clasificados -> XSS: $(wc -l < xss_endpoints.txt) | SQLi: $(wc -l < sqli_endpoints.txt) | OpenRedirect: $(wc -l < open_redirects.txt) | IDOR: $(wc -l < idor_endpoints.txt)\e[0m"
 
-                        # Filtrado de parámetros vulnerables
-                        grep -iE "id=|cat=|product=|search=|type=" lista_parametros.txt > posibles_sqli.txt
-                        grep -iE "q=|query=|keyword=|name=|email=" lista_parametros.txt > posibles_xss.txt
+# Filtrado de parámetros vulnerables
+grep -iE "id=|cat=|product=|search=|type=" lista_parametros.txt > posibles_sqli.txt
+grep -iE "q=|query=|keyword=|name=|email=" lista_parametros.txt > posibles_xss.txt
 
-                        # Fase 7: Análisis de JavaScript (Caza de Secretos)
-                        echo -e "\n\e[1;33m[*] Fase 7: Aislando y analizando archivos JavaScript...\e[0m"
-                        cat all_urls.txt | grep -E "\.js(\?|$)" > js_endpoints.txt
+# Fase 7: Análisis de JavaScript (Caza de Secretos)
+echo -e "\n\e[1;33m[*] Fase 7: Aislando y analizando archivos JavaScript...\e[0m"
+cat all_urls.txt | grep -E "\.js(\?|$)" > js_endpoints.txt
 
-                        if [ -s js_endpoints.txt ]; then
-                            echo -e "[*] Ejecutando jsexposures..."
-                            python3 /ruta/a/jsexposures/jsexposures.py --file js_endpoints.txt --max-workers 15 --log-level INFO --mode balanced
-                            
-                            echo -e "[*] Ejecutando Trufflehog sobre la lista de JS..."
-                            trufflehog filesystem --directory=./js_endpoints.txt --only-verified
-                        else
-                            echo -e "\e[1;31m[X] No se encontraron archivos JS para escanear.\e[0m"
-                        fi
+if [ -s js_endpoints.txt ]; then
+    echo -e "[*] Ejecutando jsexposures..."
+    python3 /ruta/a/jsexposures/jsexposures.py --file js_endpoints.txt --max-workers 15 --log-level INFO --mode balanced
+    
+    echo -e "[*] Ejecutando Trufflehog sobre la lista de JS..."
+    trufflehog filesystem --directory=./js_endpoints.txt --only-verified
+else
+    echo -e "\e[1;31m[X] No se encontraron archivos JS para escanear.\e[0m"
+fi
 
-                        # Fase 8: Escaneo de Vulnerabilidades con Nuclei
-                        echo -e "\n\e[1;33m[*] ¿Quieres lanzar el escaneo pesado con Nuclei? (y/n) [n en 5 min]\e[0m"
-                        read -t 300 -r respuesta
+# Fase 8: Escaneo de Vulnerabilidades con Nuclei
+echo -e "\n\e[1;33m[*] ¿Quieres lanzar el escaneo pesado con Nuclei? (y/n) [n en 5 min]\e[0m"
+read -t 300 -r respuesta
 
-                        if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
-                            echo -e "\n\e[1;33m[*] Lanzando escáner de vulnerabilidades Nuclei (Safe rate-limit)...\e[0m"
-                            nuclei -l all_urls.txt -H "$MY_UA" --rate-limit 10 -o nuclei_results.txt
-                        else
-                            echo -e "[*] Saltando fase de Nuclei por decisión del usuario."
-                        fi
+if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
+    echo -e "\n\e[1;33m[*] Lanzando escáner de vulnerabilidades Nuclei (Safe rate-limit)...\e[0m"
+    nuclei -l all_urls.txt -H "$MY_UA" --rate-limit 10 -o nuclei_results.txt
+else
+    echo -e "[*] Saltando fase de Nuclei por decisión del usuario."
+fi
 
-                        echo -e "\n\e[1;32m[*] ==========================================\e[0m"
-                        echo -e "\e[1;32m[*] ¡RECON COMPLETO! Revisa los archivos .txt \e[0m"
-                        echo -e "\e[1;32m[*] ==========================================\e[0m"</code></pre>
-                    </div>
+echo -e "\n\e[1;32m[*] ==========================================\e[0m"
+echo -e "\e[1;32m[*] ¡RECON COMPLETO! Revisa los archivos .txt \e[0m"
+echo -e "\e[1;32m[*] ==========================================\e[0m"</code></pre>
+                </div>
             </article>
 
         </section>
