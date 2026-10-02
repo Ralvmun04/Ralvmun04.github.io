@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wired // Logs & Blog</title>
+    <title>Wired // Dev Logs</title>
     
     <!-- Favicon y Tipografía -->
     <link rel="icon" type="image/png" href="lain.png">
@@ -23,10 +23,8 @@
 
         <div class="nav-links" id="navLinks">
             <a href="index.html">/home</a>
-            <a href="index.html#repos">/repos</a>
-            <a href="index.html#webs">/webs</a>
             <a href="blog.html" class="active">/blog</a>
-
+            <a href="mailto:rafa004drgb@gmail.com">/contact</a>
         </div>
     </nav>
 
@@ -34,18 +32,9 @@
         <!-- Banner del Blog -->
         <header class="hero-card">
             <p class="term-prompt">&gt; [DIRECTORY] /var/log/wired_notes</p>
-            <h1>Wired Logs & Writeups</h1>
-            <p class="status-text">Bitácora de desarrollo, notas sobre hacking ético y anotaciones técnicas.</p>
+            <h1>Dev Logs & Bitácora</h1>
+            <p class="status-text">Anotaciones sobre desarrollo de software, errores superados y notas de laboratorio.</p>
         </header>
-
-        <!-- Filtro de Categorías -->
-        <div class="blog-tags-nav">
-            <span class="tag-label">&gt; FILTRAR:</span>
-            <a href="#" class="blog-tag active">/all</a>
-            <a href="#" class="blog-tag">/writeups</a>
-            <a href="#" class="blog-tag">/development</a>
-            <a href="#" class="blog-tag">/cybersec</a>
-        </div>
 
         <!-- Lista de Entradas del Blog -->
         <section class="blog-list">
@@ -54,25 +43,13 @@
             <article class="blog-card">
                 <div class="blog-card-header">
                     <span class="blog-date">[2026-10-02]</span>
-                    <span class="status-tag dev">WRITEUP</span>
+                    <span class="status-tag dev">DEV_NOTE</span>
                 </div>
-                <h2><a href="#" class="blog-title">Resolución de máquina DockerLabs: Inj3ct0rss</a></h2>
-                <p class="blog-snippet">
-                    Análisis paso a paso sobre la explotación de la vulnerabilidad de inyección, escalada de privilegios y persistencia en el contenedor.
-                </p>
-
-                <!-- Área expandible o contenido directo -->
+                <h2 class="blog-title">Estructurando un portafolio híbrido (Dev & Ciberseguridad)</h2>
                 <div class="blog-content">
                     <p>
-                        Para comenzar con el reconocimiento de la máquina, realizamos un escaneo de puertos básico con <code>nmap</code>:
+                        Diseñar una web personal que combine la vertiente de ciberseguridad/hacking ético con el desarrollo web comercial no es sencillo. La clave ha sido mantener una estética estilo terminal sin perder legibilidad, separando los proyectos freelance de los repositorios de GitHub.
                     </p>
-                    <pre class="code-block"><code>nmap -sCV -p- --min-rate 5000 10.10.10.X -oN target_scan</code></pre>
-                    <p>
-                        Tras identificar los servicios abiertos, procedemos a fuzzear los directorios web principales en busca de parámetros vulnerables...
-                    </p>
-                </div>
-                <div class="blog-footer-link">
-                    <a href="#" class="read-more">&gt; Leer artículo completo [RAW_LOG]</a>
                 </div>
             </article>
 
@@ -80,24 +57,29 @@
             <article class="blog-card">
                 <div class="blog-card-header">
                     <span class="blog-date">[2026-09-28]</span>
-                    <span class="status-tag live">DEV</span>
+                    <span class="status-tag live">CSS</span>
                 </div>
-                <h2><a href="#" class="blog-title">Construyendo una terminal web retro con HTML y CSS</a></h2>
-                <p class="blog-snippet">
-                    Reflexiones sobre la creación de interfaces cyberpunk y el equilibrio entre estética hacker, contraste accesible y rendimiento en GitHub Pages.
-                </p>
+                <h2 class="blog-title">Paleta de colores Hacker accesible: Evitando la fatiga visual</h2>
+                <div class="blog-content">
+                    <p>
+                        El verde neón puro (<code>#00ff00</code>) sobre fondo negro absoluto termina agotando la vista en lecturas prolongadas. Para solucionarlo, ajusté el texto principal a un tono verde menta pastel (<code>#d4f8d3</code>) sobre un fondo gris-verdoso muy oscuro (<code>#060a07</code>). Reservé el verde neón y el rojo exclusivamente para etiquetas de estado e hipervínculos.
+                    </p>
+                </div>
             </article>
 
-            <!-- Entrada 3 -->
+            <!-- Entrada 3 (Ejemplo de fragmento de código) -->
             <article class="blog-card">
                 <div class="blog-card-header">
                     <span class="blog-date">[2026-05-28]</span>
-                    <span class="status-tag live">TOOLS</span>
+                    <span class="status-tag live">PYTHON</span>
                 </div>
-                <h2><a href="#" class="blog-title">Extracción automatizada de metadatos con Python</a></h2>
-                <p class="blog-snippet">
-                    Breve nota sobre cómo funciona el script Multi-Format Metadata Extractor y los principales módulos utilizados para analizar archivos multimedia.
-                </p>
+                <h2 class="blog-title">Automatizando la extracción de metadatos en auditorías</h2>
+                <div class="blog-content">
+                    <p>
+                        Durante la fase de reconocimiento OSINT, extraer metadatos de archivos multimedia de forma rápida ahorra bastante tiempo. Muestra rápida de ejecución del script en Python:
+                    </p>
+                    <pre class="code-block"><code>python3 metadata_extractor.py -d /ruta/archivos -o report.json</code></pre>
+                </div>
             </article>
 
         </section>
