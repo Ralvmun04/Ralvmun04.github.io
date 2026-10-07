@@ -58,8 +58,7 @@
                         Basados en la estrategia de <em>divide y vencerás</em>. Mientras que <strong>Merge Sort</strong> divide la lista a la mitad y requiere memoria extra para reconstruirla ordenada, <strong>Quick Sort</strong> selecciona un pivote para particionar los datos directamente en memoria, siendo uno de los algoritmos más rápidos en la práctica.
                     </p>
                     
-                    <div class="code-container">
-                        <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+
                     <pre class="code-block"><code>def quick_sort(arr):
                         if len(arr) <= 1:
                             return arr
@@ -74,8 +73,6 @@
                         Aunque ineficientes para grandes volúmenes de datos, son excelentes para entender la mecánica de iteración. <strong>Bubble Sort</strong> compara elementos adyacentes de forma continua, mientras que <strong>Gnome Sort</strong> (inspirado en cómo un gnomo de jardín ordena sus macetas) avanza mientras todo esté en orden, pero si encuentra un elemento desordenado, retrocede iterativamente intercambiándolo hasta colocarlo en su posición correcta.
                     </p>
 
-                    <div class="code-container">
-                        <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
                     <pre class="code-block"><code>def gnome_sort(arr):
                         index = 0
                         while index < len(arr):
@@ -91,8 +88,7 @@
                         También conocido como <em>Stupid Sort</em>. Su "lógica" es brutal: comprueba si la lista está ordenada; si no lo está, desordena todos los elementos de forma aleatoria (con <code>random.shuffle</code>) y vuelve a comprobar. Su complejidad en el peor de los casos es $O(\infty)$, por lo que solo es viable con listas diminutas de menos de 5 o 6 elementos.
                     </p>
 
-                    <div class="code-container">
-                        <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+
                     <pre class="code-block"><code>import random
 
                     def is_sorted(arr):
@@ -138,8 +134,7 @@
                         Tras bastante prueba y error, este ha sido el resultado. Espero que le deis la misma utilidad que le doy yo, y os animo a corregir o añadir lo que veáis necesario:
                     </p>
 
-                    <div class="code-container">
-                        <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+
                     <pre class="code-block"><code>#!/bin/bash
 
                     # Creamos un nombre de carpeta único con fecha y hora
