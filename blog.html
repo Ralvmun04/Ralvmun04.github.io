@@ -57,45 +57,48 @@
                     <p>
                         Basados en la estrategia de <em>divide y vencerás</em>. Mientras que <strong>Merge Sort</strong> divide la lista a la mitad y requiere memoria extra para reconstruirla ordenada, <strong>Quick Sort</strong> selecciona un pivote para particionar los datos directamente en memoria, siendo uno de los algoritmos más rápidos en la práctica.
                     </p>
-
-<pre class="code-block"><code>def quick_sort(arr):
-    if len(arr) <= 1:
-        return arr
-    pivot = arr[len(arr) // 2]
-    left = [x for x in arr if x < pivot]
-    middle = [x for x in arr if x == pivot]
-    right = [x for x in arr if x > pivot]
-    return quick_sort(left) + middle + quick_sort(right)</code></pre>
+                    
+                    <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+                    <pre class="code-block"><code>def quick_sort(arr):
+                        if len(arr) <= 1:
+                            return arr
+                        pivot = arr[len(arr) // 2]
+                        left = [x for x in arr if x < pivot]
+                        middle = [x for x in arr if x == pivot]
+                        right = [x for x in arr if x > pivot]
+                        return quick_sort(left) + middle + quick_sort(right)</code></pre>
 
                     <p><strong>2. Intercambio iterativo: Bubble Sort & Gnome Sort ($O(n^2)$)</strong></p>
                     <p>
                         Aunque ineficientes para grandes volúmenes de datos, son excelentes para entender la mecánica de iteración. <strong>Bubble Sort</strong> compara elementos adyacentes de forma continua, mientras que <strong>Gnome Sort</strong> (inspirado en cómo un gnomo de jardín ordena sus macetas) avanza mientras todo esté en orden, pero si encuentra un elemento desordenado, retrocede iterativamente intercambiándolo hasta colocarlo en su posición correcta.
                     </p>
 
-<pre class="code-block"><code>def gnome_sort(arr):
-    index = 0
-    while index < len(arr):
-        if index == 0 or arr[index] >= arr[index - 1]:
-            index += 1
-        else:
-            arr[index], arr[index - 1] = arr[index - 1], arr[index]
-            index -= 1
-    return arr</code></pre>
+                    <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+                    <pre class="code-block"><code>def gnome_sort(arr):
+                        index = 0
+                        while index < len(arr):
+                            if index == 0 or arr[index] >= arr[index - 1]:
+                                index += 1
+                            else:
+                                arr[index], arr[index - 1] = arr[index - 1], arr[index]
+                                index -= 1
+                        return arr</code></pre>
 
                     <p><strong>3. El algoritmo del caos: Bogo Sort ($O((n+1)!)$)</strong></p>
                     <p>
                         También conocido como <em>Stupid Sort</em>. Su "lógica" es brutal: comprueba si la lista está ordenada; si no lo está, desordena todos los elementos de forma aleatoria (con <code>random.shuffle</code>) y vuelve a comprobar. Su complejidad en el peor de los casos es $O(\infty)$, por lo que solo es viable con listas diminutas de menos de 5 o 6 elementos.
                     </p>
 
-<pre class="code-block"><code>import random
+                    <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
+                    <pre class="code-block"><code>import random
 
-def is_sorted(arr):
-    return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
+                    def is_sorted(arr):
+                        return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
 
-def bogo_sort(arr):
-    while not is_sorted(arr):
-        random.shuffle(arr)
-    return arr</code></pre>
+                    def bogo_sort(arr):
+                        while not is_sorted(arr):
+                            random.shuffle(arr)
+                        return arr</code></pre>
 
                     <p>
                         <strong>Conclusión técnica:</strong> Probar la diferencia entre ordenar 10.000 elementos con Quick Sort (milisegundos) frente a Bubble Sort (segundos) o Bogo Sort (tiempo infinito) es la forma más clara de visualizar por qué la elección de un algoritmo adecuado define el éxito de cualquier arquitectura de software.
@@ -132,6 +135,7 @@ def bogo_sort(arr):
                         Tras bastante prueba y error, este ha sido el resultado. Espero que le deis la misma utilidad que le doy yo, y os animo a corregir o añadir lo que veáis necesario:
                     </p>
 
+                    <button class="copy-btn" onclick="copyCode(this)">&gt; copy</button>
                     <pre class="code-block"><code>#!/bin/bash
 
                     # Creamos un nombre de carpeta único con fecha y hora

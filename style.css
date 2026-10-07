@@ -469,3 +469,46 @@ code {
 .read-more:hover {
     text-decoration: underline;
 }
+
+/* Contenedor relativo para posicionar el botón de copia */
+.code-container {
+    position: relative;
+    margin: 12px 0;
+}
+
+/* Ajuste al bloque de código dentro del contenedor */
+.code-container .code-block {
+    margin: 0; /* Resetea el margen porque lo maneja el contenedor */
+}
+
+/* Botón de copia discreto */
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(12, 20, 14, 0.8);
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    cursor: pointer;
+    opacity: 0.4; /* Súper discreto por defecto */
+    transition: opacity 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Al pasar el ratón por el código o el botón, se vuelve visible */
+.code-container:hover .copy-btn,
+.copy-btn:hover {
+    opacity: 1;
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+}
+
+/* Estado al copiar */
+.copy-btn.copied {
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+    opacity: 1;
+}
