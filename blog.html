@@ -119,6 +119,9 @@
                         Para quienes no lo conozcan, consiste en enfrentarse a ejecutables donde el objetivo suele ser saltarse restricciones de control de flujo, explotar desbordamientos de búfer (<em>buffer overflows</em>) o manipular variables internas para obtener acceso root y leer la flag secreta. 
                     </p>
                     <p>
+                        Esta base es exactamente la misma disciplina que se utiliza en la escena del <em>game cracking</em> para anular DRM como Denuvo. Mientras que en pwnable analizamos el binario con un desensamblador (como Ghidra o IDA Pro) buscando fallos de memoria para secuestrar el registro <code>EIP/RIP</code> y redirigir la ejecución hacia nuestro <em>shellcode</em>, en el crackeo de videojuegos se busca alterar la lógica del programa: se analizan los empaquetadores (<em>packers</em>) y comprobaciones de licencia para parchear las instrucciones condicionales (cambiando un salto <code>JZ/JE</code> por un <code>NOP</code> o <code>JMP</code> incondicional) o emular la API de licencias. La única diferencia real radica en que en el wargaming buscaremos la ejecución remota de código, mientras que en el crackeo el objetivo es bypassear la protección para ejecutar el software libremente.
+                    </p>
+                    <p>
                         Iré subiendo las soluciones documentadas y los scripts de explotación en Python a mis repositorios. Os animo a echarles un vistazo en mi perfil de <a href="https://github.com/Ralvmun04/pwnable-labs" target="_blank" rel="noopener noreferrer">GitHub</a> si os queréis adentrar en el mundillo del hacking binario.
                     </p>
                 </div>
