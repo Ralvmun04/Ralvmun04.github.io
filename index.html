@@ -8,6 +8,26 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
+<!-- Botón flotante para abrir la terminal -->
+<button class="terminal-float-btn" id="openTerminalBtn" title="Abrir Terminal">[&gt;_]</button>
+
+<!-- Ventana Modal de la Terminal Flotante -->
+<div class="terminal-modal-overlay" id="terminalModal">
+    <div class="terminal-modal-window">
+        <div class="terminal-modal-header">
+            <span class="terminal-title">&gt; guest@ralvmun04-node:~#</span>
+            <button class="terminal-close-btn" id="closeTerminalBtn">&times;</button>
+        </div>
+        <div class="terminal-body" id="terminalOutput">
+            <p class="terminal-welcome">Terminal de sistema activa. Escribe <span class="highlight">"help"</span> para ver los comandos disponibles.</p>
+        </div>
+        <div class="terminal-input-line">
+            <span class="prompt">&gt;</span>
+            <input type="text" id="terminalInput" placeholder="Escribe un comando..." autocomplete="off" spellcheck="false">
+        </div>
+    </div>
+</div>
 <body>
 
     <!-- Navegación Superior -->
@@ -37,21 +57,6 @@
                 "No importa dónde estés, todos estamos conectados."
             </blockquote>
         </header>
-
-        <!-- Terminal Interactiva Integrada -->
-        <div class="terminal-box">
-            <div class="terminal-header">
-                <span class="terminal-title">&gt; guest@ralvmun04-node:~#</span>
-                <span class="terminal-dots">● ● ●</span>
-            </div>
-            <div class="terminal-body" id="terminalOutput">
-                <p class="terminal-welcome">Bienvenido a la terminal interactiva. Escribe <span class="highlight">"help"</span> para ver los comandos disponibles.</p>
-            </div>
-            <div class="terminal-input-line">
-                <span class="prompt">&gt;</span>
-                <input type="text" id="terminalInput" placeholder="Escribe un comando..." autocomplete="off" spellcheck="false">
-            </div>
-        </div>
 
         <section id="repos" class="grid-layout">
             
@@ -145,26 +150,53 @@
         });
     </script>
 
-    <script>
+<script>
+    const openBtn = document.getElementById('openTerminalBtn');
+    const closeBtn = document.getElementById('closeTerminalBtn');
+    const modal = document.getElementById('terminalModal');
     const inputField = document.getElementById('terminalInput');
     const outputContainer = document.getElementById('terminalOutput');
 
+    // Abrir terminal
+    openBtn.addEventListener('click', () => {
+        modal.classList.add('active');
+        setTimeout(() => inputField.focus(), 100); // Foco automático en el input
+    });
+
+    // Cerrar terminal con el botón X
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    // Cerrar haciendo clic fuera de la ventana modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+        }
+    });
+
+    // Cerrar con la tecla ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+
+    // Procesar comandos de la terminal
     inputField.addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             const command = inputField.value.trim().toLowerCase();
             
-            // Mostrar el comando introducido por el usuario
             const userCommandP = document.createElement('p');
             userCommandP.innerHTML = `<span style="color: var(--neon-green);">&gt;</span> ${escapeHtml(inputField.value)}`;
             outputContainer.appendChild(userCommandP);
 
-            // Procesar la respuesta del comando
             const responseP = document.createElement('p');
             responseP.classList.add('terminal-response');
 
             switch (command) {
                 case 'help':
-                    responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.";
+                    responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.<br>- <b>exit</b>: Cierra la ventana.";
                     break;
                 case 'whoami':
                     responseP.innerText = "Rafael Álvarez // Desarrollador Web & Entusiasta de la Ciberseguridad / Hacking Ético.";
@@ -180,6 +212,10 @@
                     break;
                 case 'clear':
                     outputContainer.innerHTML = '';
+                    inputField.value = '';
+                    return;
+                case 'exit':
+                    modal.classList.remove('active');
                     inputField.value = '';
                     return;
                 case 'sudo rm -rf /':
@@ -199,13 +235,11 @@
                 outputContainer.appendChild(responseP);
             }
 
-            // Limpiar input y hacer scroll automático al final
             inputField.value = '';
             outputContainer.scrollTop = outputContainer.scrollHeight;
         }
     });
 
-    // Función auxiliar para seguridad básica de texto
     function escapeHtml(text) {
         return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
