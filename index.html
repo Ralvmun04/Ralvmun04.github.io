@@ -8,27 +8,27 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
-<!-- Botón flotante para abrir la terminal -->
-<button class="terminal-float-btn" id="openTerminalBtn" title="Abrir Terminal">[&gt;_]</button>
+    <!-- Botón flotante para abrir la terminal (Alineado y dentro del body) -->
+    <button class="terminal-float-btn" id="openTerminalBtn" title="Abrir Terminal">&gt;_</button>
 
-<!-- Ventana Modal de la Terminal Flotante -->
-<div class="terminal-modal-overlay" id="terminalModal">
-    <div class="terminal-modal-window">
-        <div class="terminal-modal-header">
-            <span class="terminal-title">&gt; guest@ralvmun04-node:~#</span>
-            <button class="terminal-close-btn" id="closeTerminalBtn">&times;</button>
-        </div>
-        <div class="terminal-body" id="terminalOutput">
-            <p class="terminal-welcome">Terminal de sistema activa. Escribe <span class="highlight">"help"</span> para ver los comandos disponibles.</p>
-        </div>
-        <div class="terminal-input-line">
-            <span class="prompt">&gt;</span>
-            <input type="text" id="terminalInput" placeholder="Escribe un comando..." autocomplete="off" spellcheck="false">
+    <!-- Ventana Modal de la Terminal Flotante -->
+    <div class="terminal-modal-overlay" id="terminalModal">
+        <div class="terminal-modal-window">
+            <div class="terminal-modal-header">
+                <span class="terminal-title">&gt; guest@ralvmun04-node:~#</span>
+                <button class="terminal-close-btn" id="closeTerminalBtn">&times;</button>
+            </div>
+            <div class="terminal-body" id="terminalOutput">
+                <p class="terminal-welcome">Terminal de sistema activa. Escribe <span class="highlight">"help"</span> para ver los comandos disponibles.</p>
+            </div>
+            <div class="terminal-input-line">
+                <span class="prompt">&gt;</span>
+                <input type="text" id="terminalInput" placeholder="Escribe un comando..." autocomplete="off" spellcheck="false">
+            </div>
         </div>
     </div>
-</div>
-<body>
 
     <!-- Navegación Superior -->
     <nav class="nav-bar">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="nav-links" id="navLinks">
-            <a href="#index.html" class="active">/home</a>
+            <a href="index.html" class="active">/home</a>
             <a href="#repos">/repos</a>
             <a href="#webs">/webs</a>
             <a href="blog.html">/blog</a>
@@ -141,6 +141,89 @@
         </div>
     </footer>
 
+    <!-- Estilos específicos para asegurar que el botón y el modal no cojan estilos globales raros -->
+    <style>
+        .terminal-float-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #080f0a;
+            color: #00ff66;
+            border: 1px solid #1f3a24;
+            padding: 10px 14px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            transition: all 0.2s ease;
+        }
+        .terminal-float-btn:hover {
+            background: rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+        }
+        .terminal-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10000;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        .terminal-modal-overlay.active {
+            opacity: 1; visibility: visible;
+        }
+        .terminal-modal-window {
+            background: #080f0a;
+            border: 1px solid #00ff66;
+            border-radius: 4px;
+            width: 90%; max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.2s ease;
+        }
+        .terminal-modal-overlay.active .terminal-modal-window {
+            transform: scale(1);
+        }
+        .terminal-modal-header {
+            background: rgba(0, 255, 102, 0.08);
+            border-bottom: 1px solid #1f3a24;
+            padding: 8px 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.8rem;
+        }
+        .terminal-title { color: #00ff66; }
+        .terminal-close-btn {
+            background: transparent; border: none; color: #888;
+            font-size: 1.1rem; cursor: pointer;
+        }
+        .terminal-close-btn:hover { color: #ff5555; }
+        .terminal-body {
+            padding: 12px; height: 220px; overflow-y: auto;
+            font-size: 0.85rem; display: flex; flex-direction: column; gap: 6px;
+        }
+        .terminal-body p { margin: 0; line-height: 1.3; }
+        .terminal-welcome .highlight { color: #00ff66; }
+        .terminal-response { color: #aaa; }
+        .terminal-error { color: #ff5555; }
+        .terminal-input-line {
+            display: flex; align-items: center; padding: 10px 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border-top: 1px solid #1f3a24;
+        }
+        .terminal-input-line .prompt { color: #00ff66; margin-right: 8px; font-weight: bold; }
+        .terminal-input-line input {
+            background: transparent; border: none; outline: none;
+            color: #d4f8d3; font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem; width: 100%;
+        }
+    </style>
+
     <script>
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
@@ -148,102 +231,94 @@
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('open');
         });
+
+        const openBtn = document.getElementById('openTerminalBtn');
+        const closeBtn = document.getElementById('closeTerminalBtn');
+        const modal = document.getElementById('terminalModal');
+        const inputField = document.getElementById('terminalInput');
+        const outputContainer = document.getElementById('terminalOutput');
+
+        openBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            setTimeout(() => inputField.focus(), 100);
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                modal.classList.remove('active');
+            }
+        });
+
+        inputField.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const command = inputField.value.trim().toLowerCase();
+                
+                const userCommandP = document.createElement('p');
+                userCommandP.innerHTML = `<span style="color: #00ff66;">&gt;</span> ${escapeHtml(inputField.value)}`;
+                outputContainer.appendChild(userCommandP);
+
+                const responseP = document.createElement('p');
+                responseP.classList.add('terminal-response');
+
+                switch (command) {
+                    case 'help':
+                        responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.<br>- <b>exit</b>: Cierra la ventana.";
+                        break;
+                    case 'whoami':
+                        responseP.innerText = "Rafael Álvarez // Desarrollador Web & Entusiasta de la Ciberseguridad / Hacking Ético.";
+                        break;
+                    case 'skills':
+                        responseP.innerText = "Stack: Python, Bash, HTML5/CSS3, JavaScript, Linux, Git, Reverse Engineering (pwnable.kr).";
+                        break;
+                    case 'projects':
+                        responseP.innerHTML = "Repositorios clave:<br>- Recon.sh (Automatización Bug Bounty)<br>- Algoritmos de Ordenación en Python<br>- Writeups de Pwnable";
+                        break;
+                    case 'contact':
+                        responseP.innerHTML = "Correo: <a href='mailto:rafa004drgb@gmail.com' style='color: #00ff66;'>rafa004drgb@gmail.com</a><br>GitHub: <a href='https://github.com/Ralvmun04' target='_blank' style='color: #00ff66;'>github.com/Ralvmun04</a>";
+                        break;
+                    case 'clear':
+                        outputContainer.innerHTML = '';
+                        inputField.value = '';
+                        return;
+                    case 'exit':
+                        modal.classList.remove('active');
+                        inputField.value = '';
+                        return;
+                    case 'sudo rm -rf /':
+                        responseP.classList.add('terminal-error');
+                        responseP.innerText = "Nice try! Permiso denegado. Este nodo está protegido.";
+                        break;
+                    case '':
+                        responseP.innerText = "";
+                        break;
+                    default:
+                        responseP.classList.add('terminal-error');
+                        responseP.innerText = `Comando no reconocido: "${command}". Escribe "help" para ver los comandos válidos.`;
+                        break;
+                }
+
+                if (command !== '') {
+                    outputContainer.appendChild(responseP);
+                }
+
+                inputField.value = '';
+                outputContainer.scrollTop = outputContainer.scrollHeight;
+            }
+        });
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
     </script>
-
-<script>
-    const openBtn = document.getElementById('openTerminalBtn');
-    const closeBtn = document.getElementById('closeTerminalBtn');
-    const modal = document.getElementById('terminalModal');
-    const inputField = document.getElementById('terminalInput');
-    const outputContainer = document.getElementById('terminalOutput');
-
-    // Abrir terminal
-    openBtn.addEventListener('click', () => {
-        modal.classList.add('active');
-        setTimeout(() => inputField.focus(), 100); // Foco automático en el input
-    });
-
-    // Cerrar terminal con el botón X
-    closeBtn.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-
-    // Cerrar haciendo clic fuera de la ventana modal
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
-
-    // Cerrar con la tecla ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            modal.classList.remove('active');
-        }
-    });
-
-    // Procesar comandos de la terminal
-    inputField.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            const command = inputField.value.trim().toLowerCase();
-            
-            const userCommandP = document.createElement('p');
-            userCommandP.innerHTML = `<span style="color: var(--neon-green);">&gt;</span> ${escapeHtml(inputField.value)}`;
-            outputContainer.appendChild(userCommandP);
-
-            const responseP = document.createElement('p');
-            responseP.classList.add('terminal-response');
-
-            switch (command) {
-                case 'help':
-                    responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.<br>- <b>exit</b>: Cierra la ventana.";
-                    break;
-                case 'whoami':
-                    responseP.innerText = "Rafael Álvarez // Desarrollador Web & Entusiasta de la Ciberseguridad / Hacking Ético.";
-                    break;
-                case 'skills':
-                    responseP.innerText = "Stack: Python, Bash, HTML5/CSS3, JavaScript, Linux, Git, Reverse Engineering (pwnable.kr).";
-                    break;
-                case 'projects':
-                    responseP.innerHTML = "Repositorios clave:<br>- Recon.sh (Automatización Bug Bounty)<br>- Algoritmos de Ordenación en Python<br>- Writeups de Pwnable";
-                    break;
-                case 'contact':
-                    responseP.innerHTML = "Correo: <a href='mailto:rafa004drgb@gmail.com' style='color: var(--neon-green);'>rafa004drgb@gmail.com</a><br>GitHub: <a href='https://github.com/Ralvmun04' target='_blank' style='color: var(--neon-green);'>github.com/Ralvmun04</a>";
-                    break;
-                case 'clear':
-                    outputContainer.innerHTML = '';
-                    inputField.value = '';
-                    return;
-                case 'exit':
-                    modal.classList.remove('active');
-                    inputField.value = '';
-                    return;
-                case 'sudo rm -rf /':
-                    responseP.classList.add('terminal-error');
-                    responseP.innerText = "Nice try! Permiso denegado. Este nodo está protegido.";
-                    break;
-                case '':
-                    responseP.innerText = "";
-                    break;
-                default:
-                    responseP.classList.add('terminal-error');
-                    responseP.innerText = `Comando no reconocido: "${command}". Escribe "help" para ver los comandos válidos.`;
-                    break;
-            }
-
-            if (command !== '') {
-                outputContainer.appendChild(responseP);
-            }
-
-            inputField.value = '';
-            outputContainer.scrollTop = outputContainer.scrollHeight;
-        }
-    });
-
-    function escapeHtml(text) {
-        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-</script>
-
 </body>
 </html>
