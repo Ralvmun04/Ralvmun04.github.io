@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>.hack//The World - Test Interface</title>
+    <title>.hack//Rebirth OS Interface</title>
     
-    <!-- Fuentes de Google Fonts (Orbitron y Exo 2) -->
+    <!-- Fuente similar para títulos y datos técnicos -->
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILOS EXCLUSIVOS .hack//G.U. REBIRTH --- */
+        /* --- ESTILOS EXCLUSIVOS .HACK//REBIRTH --- */
         :root {
-            --gu-bg-dark: #020609;
-            --gu-cyan-bright: #00e5ff;
-            --gu-cyan-muted: rgba(0, 229, 255, 0.4);
-            --gu-text-primary: #ffffff;
-            --gu-text-muted: #8ba0b0;
-            --gu-glass-bg: rgba(10, 25, 35, 0.65);
-            --gu-glass-border: rgba(0, 229, 255, 0.35);
+            --rebirth-bg-gray: #d0d0d2;
+            --rebirth-bg-gray-dark: #b8b8ba;
+            --rebirth-red: #8f0c2a;
+            --rebirth-cyan-panel: rgba(85, 190, 215, 0.45);
+            --rebirth-white: #ffffff;
+            --rebirth-new-yellow: #f5f14a;
+            --rebirth-text-muted: #505050;
             --font-gu-title: 'Orbitron', sans-serif;
             --font-gu-body: 'Exo 2', sans-serif;
         }
@@ -29,204 +29,281 @@
         }
 
         body {
-            background-color: var(--gu-bg-dark);
-            color: var(--gu-text-primary);
+            background-color: var(--rebirth-bg-gray);
             font-family: var(--font-gu-body);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            color: var(--rebirth-white);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* Fondo radial ambiental similar al sistema de The World */
-        body::before {
-            content: "";
-            position: fixed;
+        /* Patrón de fondo (Curvas y Líneas Rojas) */
+        .rebirth-background {
+            position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 30%, rgba(0, 229, 255, 0.05) 0%, rgba(2, 6, 9, 0.9) 80%);
-            z-index: -1;
-            pointer-events: none;
+            z-index: 0;
+            background: 
+                /* Línea roja 1 */
+                linear-gradient(rgba(143, 12, 42, 0) 50%, var(--rebirth-red) 50%, rgba(143, 12, 42, 0) 51%) 100px 50% / 100% 1px no-repeat,
+                /* Línea roja 2 (diagonal) */
+                linear-gradient(45deg, rgba(143, 12, 42, 0) 48%, var(--rebirth-red) 50%, rgba(143, 12, 42, 0) 52%) 50% 50% / 100% 100% no-repeat;
         }
 
-        /* Barra de navegación superior geométrica */
-        .gu-nav {
-            background: var(--gu-glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--gu-cyan-bright);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            animation: guPanelEntrance 0.4s ease-out forwards;
-        }
-
-        .gu-nav-brand {
-            font-family: var(--font-gu-title);
-            font-size: 1rem;
-            color: var(--gu-cyan-bright);
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .gu-status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--gu-cyan-bright);
-            box-shadow: 0 0 8px var(--gu-cyan-bright);
+        /* Formas curvas oscuras del fondo */
+        .rebirth-background::after {
+            content: "";
+            position: absolute;
+            bottom: -150px; right: -150px;
+            width: 800px; height: 800px;
+            background: var(--rebirth-bg-gray-dark);
             border-radius: 50%;
+            z-index: -1;
         }
 
-        .gu-nav-links {
+        .rebirth-background::before {
+            content: "";
+            position: absolute;
+            bottom: -50px; right: -50px;
+            width: 500px; height: 500px;
+            background: var(--rebirth-bg-gray);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        /* --- DIAL CENTRAL INFERIOR "THE WORLD" --- */
+        .gu-main-dial-container {
+            position: absolute;
+            bottom: 60px;
+            left: 300px; /* Ajuste para centrar el dial en la imagen */
+            z-index: 10;
+            transform: translateX(-50%);
             display: flex;
-            gap: 25px;
+            justify-content: center;
         }
 
-        .gu-nav-links a {
-            font-family: var(--font-gu-title);
-            font-size: 0.85rem;
-            text-decoration: none;
-            color: var(--gu-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: color 0.2s ease;
-        }
-
-        .gu-nav-links a:hover, .gu-nav-links a.active {
-            color: var(--gu-cyan-bright);
-            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
-        }
-
-        /* Contenedor Principal */
-        .gu-container {
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            width: 100%;
-            flex: 1;
-        }
-
-        /* Ventanas flotantes / Paneles de cristal */
-        .gu-panel {
-            background: var(--gu-glass-bg);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--gu-glass-border);
-            border-radius: 3px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.08),
-                        0 8px 25px rgba(0, 0, 0, 0.6);
-            animation: guPanelEntrance 0.6s ease-out forwards;
-            opacity: 0;
-        }
-
-        .gu-panel:nth-child(1) { animation-delay: 0.1s; }
-        .gu-panel:nth-child(2) { animation-delay: 0.25s; }
-
-        .gu-title {
-            font-family: var(--font-gu-title);
-            font-size: 1.4rem;
-            color: var(--gu-text-primary);
-            margin-bottom: 15px;
-            letter-spacing: 1.5px;
+        .gu-dial {
+            width: 180px; height: 180px;
+            background: #e0e0e0;
+            border: 15px solid #d0d0d2;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-left: 3px solid var(--gu-cyan-bright);
-            padding-left: 10px;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            position: relative;
         }
 
-        .gu-text {
-            color: var(--gu-text-muted);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
+        .gu-dial-white-ring {
+            width: 140px; height: 140px;
+            background: var(--rebirth-white);
+            border-radius: 50%;
+            border: 2px solid #505050;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Botón estilo interfaz R:2 */
-        .gu-btn {
-            background: rgba(0, 229, 255, 0.1);
-            color: var(--gu-cyan-bright);
-            border: 1px solid var(--gu-cyan-bright);
-            padding: 8px 18px;
+        .gu-dial-text {
             font-family: var(--font-gu-title);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .gu-btn:hover {
-            background: var(--gu-cyan-bright);
-            color: var(--gu-bg-dark);
-            box-shadow: 0 0 12px var(--gu-cyan-bright);
-        }
-
-        /* Animación de aparición de paneles */
-        @keyframes guPanelEntrance {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Pie de página */
-        .gu-footer {
+            font-size: 1.3rem;
+            color: var(--rebirth-red);
+            font-weight: bold;
             text-align: center;
-            padding: 20px;
-            font-size: 0.8rem;
-            color: var(--gu-text-muted);
-            border-top: 1px solid rgba(0, 229, 255, 0.1);
+            margin-top: -10px;
         }
+
+        .gu-dial-arrow {
+            position: absolute;
+            top: -10px;
+            width: 0; height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 20px solid #a0cf00; /* Flecha verde */
+        }
+
+        /* --- VENTANA DE DATOS FLOTANTE (CIAN) --- */
+        .gu-info-panel {
+            position: absolute;
+            top: 250px;
+            right: 200px;
+            z-index: 20;
+            width: 480px;
+            height: 250px;
+            background: var(--rebirth-cyan-panel);
+            backdrop-filter: blur(2px);
+            padding: 30px;
+            border-radius: 2px;
+            box-shadow: inset 0 0 30px rgba(255,255,255,0.1);
+        }
+
+        .gu-info-title {
+            font-family: var(--font-gu-body);
+            font-size: 2.8rem;
+            color: var(--rebirth-white);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .gu-info-text {
+            font-family: var(--font-gu-body);
+            font-size: 0.8rem;
+            color: var(--rebirth-white);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .gu-info-subtext {
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            font-family: var(--font-gu-body);
+            font-size: 0.7rem;
+            color: var(--rebirth-white);
+        }
+
+        .gu-info-id {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            font-family: var(--font-gu-title);
+            font-size: 1.2rem;
+            color: var(--rebirth-white);
+        }
+
+        /* --- ICONOS FLOTANTES --- */
+        .gu-icon-container {
+            position: absolute;
+            z-index: 5;
+        }
+
+        .gu-icon-circle {
+            width: 50px; height: 50px;
+            background: #808080;
+            border-radius: 50%;
+            border: 2px solid var(--rebirth-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            position: relative;
+        }
+
+        .gu-icon-image {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Etiqueta "NEW" */
+        .gu-label-new {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000000;
+            background: var(--rebirth-new-yellow);
+            padding: 1px 6px;
+            border-radius: 2px;
+            font-family: var(--font-gu-title);
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        /* --- POSICIONAMIENTO DE ICONOS --- */
+        /* Icono Herramientas (arriba izquierda) */
+        .gu-icon-tools {
+            top: 250px;
+            left: 100px;
+        }
+
+        /* Icono Película / NEW (arriba izquierda) */
+        .gu-icon-film {
+            top: 180px;
+            left: 280px;
+        }
+
+        /* Icono Katana (arriba derecha) */
+        .gu-icon-katana {
+            top: 300px;
+            right: 150px;
+        }
+
+        /* Icono Correo / NEW (abajo derecha) */
+        .gu-icon-mail {
+            bottom: 250px;
+            right: 100px;
+        }
+
+        /* Icono Chat / NEW (abajo centro) */
+        .gu-icon-chat {
+            bottom: 100px;
+            left: 600px;
+        }
+
+        /* Icono Perfil / NEW (abajo izquierda) */
+        .gu-icon-profile {
+            bottom: 100px;
+            left: 100px;
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- Navegación del Sistema R:2 -->
-    <nav class="gu-nav">
-        <div class="gu-nav-brand">
-            <span class="gu-status-dot"></span> THE WORLD // R:2 SYSTEM
+    <!-- Fondo -->
+    <div class="rebirth-background"></div>
+
+    <!-- Dial Central -->
+    <div class="gu-main-dial-container">
+        <div class="gu-dial">
+            <div class="gu-dial-arrow"></div>
+            <div class="gu-dial-white-ring">
+                <div class="gu-dial-text">The<br>World</div>
+            </div>
         </div>
-        <div class="gu-nav-links">
-            <a href="#" class="active">_Desktop</a>
-            <a href="index.html">_Return_Home</a>
+    </div>
+
+    <!-- Ventana de Información -->
+    <div class="gu-info-panel">
+        <h1 class="gu-info-title">The World</h1>
+        <p class="gu-info-text">
+            MINE OS offers a creative and comfortable lifestyle for everyone.
+        </p>
+        <span class="gu-info-subtext">Altimit Mine</span>
+        <span class="gu-info-id">MINE OS</span>
+    </div>
+
+    <!-- Iconos -->
+    <!-- Herramientas -->
+    <div class="gu-icon-container gu-icon-tools">
+        <div class="gu-icon-circle">
+            <!-- Marcador para el icono -->
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzkwIDExNy45MWMtMjAuMS04Ljg2LTM1LjY4LTI3LjQ2LTQwLjMzLTUwLjg0TDM0OC40NCA1NC45NWM4Ljk5LTguOTggMTcuOTgtMTcuOTcgMjYuOTYtMjYuOTYtNC4wNS00LjA1LTguMTEtOC4xMS0xMi4xNi0xMi4xNi0xNS41MyAxNS41Mi0zMS4wNiAzMS4wNS00Ni41OSA0Ni41OC00LjkxLTIuMTItOS44My00LjI0LTE0Ljc0LTYuMzZMODYuNDEgMzc4Ljg4Yzk5Ljg2IDk5Ljg2IDE5OS43MSAxOTkuNzEgMjk5LjU3IDI5OS41N0wzOTAuMDYgMjE3Ljkxek0xNTEuNjQgMzE1LjI1Yy00LjUtNC41LTguOTktOC45OS0xMy40OS0xMy40OS05LjM5IDkuMzktMTguNzkgMTguNzgtMjguMTggMjguMThMTEwIDM5Mi43OGM4Ljk5LTguOTkgMTcuOTgtMTcuOTcgMjYuOTYtMjYuOTZsNjEuMDMtNjEuMDN6TTQ2My45IDM3NS45NGMtNi4wOC02LjA4LTEyLjE2LTEyLjE2LTE4LjIzLTE4LjI0TDUwMS4zNiA0NTQuOTVjNC4wNSA0LjA1IDguMTEgOC4xMSAxMi4xNiAxMi4xNi04Ljk5LTguOTktMTcuOTctMTcuOTctMjYuOTYtMjYuOTZ6TTE2My45NiA0MzEuMzJjNC4wNSA0LjA1IDguMTEgOC4xMSAxMi4xNiAxMi4xNi04Ljk5LTguOTktMTcuOTctMTcuOTctMjYuOTYtMjYuOTZ6Ii8+PC9zdmc+" class="gu-icon-image" alt="Tools">
         </div>
-    </nav>
+    </div>
 
-    <!-- Contenido -->
-    <main class="gu-container">
-        
-        <section class="gu-panel">
-            <h1 class="gu-title">&gt; SYSTEM_NOTIFICATION</h1>
-            <p class="gu-text">
-                Interfaz de prueba inspirada en el sistema operativo <strong>.hack//G.U. Rebirth (The World R:2)</strong>. Este diseño prioriza el uso de paneles translúcidos (glassmorphism), tipografías geométricas futuristas y una paleta de colores basada en tonos cianes limpios.
-            </p>
-            <a href="#" class="gu-btn">[ Inicializar Módulo ]</a>
-        </section>
+    <!-- Película / NEW -->
+    <div class="gu-icon-container gu-icon-film">
+        <span class="gu-label-new">NEW</span>
+        <div class="gu-icon-circle">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI5LjkxIDU5LjQyTDI1NiAyMzMuMzMgODUuMTEgNTkuNDIgOTAuMTEgNDU0Ljk1IDI1NiAyODEuMDYgNDIxLjkgNDU0Ljk1ek0yNTYgNTkuNDJMNjYuMzggNDU0Ljk1bDE4OS42Mi0xOTkuMTNsMTg5LjYyIDE5OS4xM3oiLz48L3N2Zy4+" class="gu-icon-image" alt="Film">
+        </div>
+    </div>
 
-        <section class="gu-panel">
-            <h2 class="gu-title">&gt; AREA_CHARACTERISTICS</h2>
-            <p class="gu-text">
-                Los elementos interactivos responden con destellos de luz de neón cian, imitando los menús de selección de personajes y gestión de datos que utilizaba Haseo en el juego.
-            </p>
-        </section>
+    <!-- Katana -->
+    <div class="gu-icon-container gu-icon-katana">
+        <div class="gu-icon-circle">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNOTQuNjIgOTQuNjJMNDU0Ljk1IDQ1NC45NU0xNzYuMzkgMTc2LjM5TDI5MC44MiAyOTAuODJNOTQuNjIgMzI0LjgyTDMyNC44MiA5NC42Mk0xNzYuMzkgMzM4Ljg4TDMyNC44MiA0MTIuOTlNMjk4LjM4IDM2My45TDQ1NC45NSA0NTQuOTUiLz48L3N2Zy4+" class="gu-icon-image" alt="Katana">
+        </div>
+    </div>
 
-    </main>
-
-    <footer class="gu-footer">
-        CC2 // .hack//G.U. Project Simulation Node
-    </footer>
+    <!-- Correo / NEW -->
+    <div class="gu-icon-container gu-icon-mail">
+        <span class="gu-label-new">NEW</span>
+        <div class="gu-icon-circle">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDU5LjQyTDEwOS40NSAxOTMuMDRsMjkwLjY1IDEwNy4xek04NS4xMSA0NDUuNTZsMTcwLjY1LTEyNi43M2w5NS4zMSAxMDEuNDN6TTEwOS40NSAxOTMuMDNsMTUzLjkxIDIwMS4xMkwzODUuODkgMjk0LjE0ek04NS4xMSAzNzUuOTRMOTIuODkgMTU0Ljk1bDEwNy4xIDI5MC42NXpNMzgyLjMzIDMxNC43N2wtMTA3LjEgMjkwLjY1TDQ1NC45NSA0MjEuOXpNMzgyLjMzIDI3MS45TDMwNC40NSA1NC45NUw0MjEuOQAzNzUuOTR6TTEwMC40NSAzMTQuNzdsMTczLjg5IDI3NC42OEw4NS4xMSA0MjEuOXpNNTAxLjM2IDUzLjM4TDQwMS4zNSAyMzMuMzNsMTU3LjkgMTkyLjN6Ii8+PC9zdmc+" class="gu-icon-image" alt="Mail">
+        </div>
+    </div>
 
 </body>
 </html>
