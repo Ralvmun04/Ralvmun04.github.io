@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>.hack//Rebirth OS Interface</title>
+    <title>Rafael Álvarez // .hack//Portfolio</title>
     
-    <!-- Fuente similar para títulos y datos técnicos -->
+    <!-- Tipografías de .hack//G.U. (Orbitron y Exo 2) -->
     <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILOS EXCLUSIVOS .HACK//REBIRTH --- */
         :root {
             --rebirth-bg-gray: #d0d0d2;
             --rebirth-bg-gray-dark: #b8b8ba;
             --rebirth-red: #8f0c2a;
-            --rebirth-cyan-panel: rgba(85, 190, 215, 0.45);
+            --rebirth-cyan-panel: rgba(85, 190, 215, 0.4);
+            --rebirth-cyan-border: rgba(0, 150, 180, 0.6);
             --rebirth-white: #ffffff;
-            --rebirth-new-yellow: #f5f14a;
-            --rebirth-text-muted: #505050;
+            --rebirth-text-dark: #1a2530;
+            --rebirth-text-muted: #4a5568;
             --font-gu-title: 'Orbitron', sans-serif;
             --font-gu-body: 'Exo 2', sans-serif;
         }
@@ -31,279 +31,293 @@
         body {
             background-color: var(--rebirth-bg-gray);
             font-family: var(--font-gu-body);
-            color: var(--rebirth-white);
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+            color: var(--rebirth-text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* Patrón de fondo (Curvas y Líneas Rojas) */
-        .rebirth-background {
-            position: absolute;
+        /* Fondo geométrico sutil estilo The World */
+        body::before {
+            content: "";
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            background: 
-                /* Línea roja 1 */
-                linear-gradient(rgba(143, 12, 42, 0) 50%, var(--rebirth-red) 50%, rgba(143, 12, 42, 0) 51%) 100px 50% / 100% 1px no-repeat,
-                /* Línea roja 2 (diagonal) */
-                linear-gradient(45deg, rgba(143, 12, 42, 0) 48%, var(--rebirth-red) 50%, rgba(143, 12, 42, 0) 52%) 50% 50% / 100% 100% no-repeat;
-        }
-
-        /* Formas curvas oscuras del fondo */
-        .rebirth-background::after {
-            content: "";
-            position: absolute;
-            bottom: -150px; right: -150px;
-            width: 800px; height: 800px;
-            background: var(--rebirth-bg-gray-dark);
-            border-radius: 50%;
             z-index: -1;
+            background: 
+                linear-gradient(rgba(143, 12, 42, 0.03) 50%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(85, 190, 215, 0.2) 0%, transparent 60%);
+            pointer-events: none;
         }
 
-        .rebirth-background::before {
-            content: "";
-            position: absolute;
-            bottom: -50px; right: -50px;
-            width: 500px; height: 500px;
-            background: var(--rebirth-bg-gray);
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        /* --- DIAL CENTRAL INFERIOR "THE WORLD" --- */
-        .gu-main-dial-container {
-            position: absolute;
-            bottom: 60px;
-            left: 300px; /* Ajuste para centrar el dial en la imagen */
-            z-index: 10;
-            transform: translateX(-50%);
+        /* --- NAVEGACIÓN SUPERIOR ESTILO R:2 --- */
+        .gu-nav {
+            background: rgba(240, 240, 242, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--rebirth-red);
             display: flex;
-            justify-content: center;
-        }
-
-        .gu-dial {
-            width: 180px; height: 180px;
-            background: #e0e0e0;
-            border: 15px solid #d0d0d2;
-            border-radius: 50%;
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 15px rgba(0,0,0,0.3);
-            position: relative;
+            padding: 15px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .gu-dial-white-ring {
-            width: 140px; height: 140px;
-            background: var(--rebirth-white);
-            border-radius: 50%;
-            border: 2px solid #505050;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .gu-dial-text {
+        .gu-nav-brand {
             font-family: var(--font-gu-title);
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             color: var(--rebirth-red);
-            font-weight: bold;
-            text-align: center;
-            margin-top: -10px;
-        }
-
-        .gu-dial-arrow {
-            position: absolute;
-            top: -10px;
-            width: 0; height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid #a0cf00; /* Flecha verde */
-        }
-
-        /* --- VENTANA DE DATOS FLOTANTE (CIAN) --- */
-        .gu-info-panel {
-            position: absolute;
-            top: 250px;
-            right: 200px;
-            z-index: 20;
-            width: 480px;
-            height: 250px;
-            background: var(--rebirth-cyan-panel);
-            backdrop-filter: blur(2px);
-            padding: 30px;
-            border-radius: 2px;
-            box-shadow: inset 0 0 30px rgba(255,255,255,0.1);
-        }
-
-        .gu-info-title {
-            font-family: var(--font-gu-body);
-            font-size: 2.8rem;
-            color: var(--rebirth-white);
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .gu-info-text {
-            font-family: var(--font-gu-body);
-            font-size: 0.8rem;
-            color: var(--rebirth-white);
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
-
-        .gu-info-subtext {
-            position: absolute;
-            bottom: 20px;
-            left: 30px;
-            font-family: var(--font-gu-body);
-            font-size: 0.7rem;
-            color: var(--rebirth-white);
-        }
-
-        .gu-info-id {
-            position: absolute;
-            bottom: 20px;
-            right: 30px;
-            font-family: var(--font-gu-title);
-            font-size: 1.2rem;
-            color: var(--rebirth-white);
-        }
-
-        /* --- ICONOS FLOTANTES --- */
-        .gu-icon-container {
-            position: absolute;
-            z-index: 5;
-        }
-
-        .gu-icon-circle {
-            width: 50px; height: 50px;
-            background: #808080;
-            border-radius: 50%;
-            border: 2px solid var(--rebirth-white);
+            letter-spacing: 2px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+            gap: 12px;
+        }
+
+        .gu-status-dot {
+            width: 10px;
+            height: 10px;
+            background: #a0cf00; /* Verde activo */
+            box-shadow: 0 0 8px #a0cf00;
+            border-radius: 50%;
+        }
+
+        .gu-nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .gu-nav-links a {
+            font-family: var(--font-gu-title);
+            font-size: 0.85rem;
+            text-decoration: none;
+            color: var(--rebirth-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s ease;
+        }
+
+        .gu-nav-links a:hover, .gu-nav-links a.active {
+            color: var(--rebirth-red);
+            text-shadow: 0 0 6px rgba(143, 12, 42, 0.3);
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .gu-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* --- PANELES FLOTANTES (ESTILO VENTANA R:2) --- */
+        .gu-panel {
+            background: var(--rebirth-cyan-panel);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--rebirth-cyan-border);
+            border-radius: 4px;
+            padding: 30px;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2),
+                        0 8px 25px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
-        .gu-icon-image {
-            width: 30px;
-            height: 30px;
+        .gu-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--rebirth-white);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
 
-        /* Etiqueta "NEW" */
-        .gu-label-new {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #000000;
-            background: var(--rebirth-new-yellow);
-            padding: 1px 6px;
-            border-radius: 2px;
+        .gu-title {
             font-family: var(--font-gu-title);
-            font-size: 0.7rem;
-            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--rebirth-white);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            letter-spacing: 1.5px;
         }
 
-        /* --- POSICIONAMIENTO DE ICONOS --- */
-        /* Icono Herramientas (arriba izquierda) */
-        .gu-icon-tools {
-            top: 250px;
-            left: 100px;
+        .gu-badge {
+            background: var(--rebirth-red);
+            color: var(--rebirth-white);
+            font-family: var(--font-gu-title);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 2px;
+            letter-spacing: 1px;
         }
 
-        /* Icono Película / NEW (arriba izquierda) */
-        .gu-icon-film {
-            top: 180px;
-            left: 280px;
+        .gu-text {
+            color: var(--rebirth-text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-weight: 500;
         }
 
-        /* Icono Katana (arriba derecha) */
-        .gu-icon-katana {
-            top: 300px;
-            right: 150px;
+        /* --- GRID DE PROYECTOS / REPOS --- */
+        .gu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
         }
 
-        /* Icono Correo / NEW (abajo derecha) */
-        .gu-icon-mail {
-            bottom: 250px;
-            right: 100px;
+        .gu-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(0, 150, 180, 0.3);
+            padding: 20px;
+            border-radius: 3px;
+            transition: transform 0.2s ease, background 0.2s ease;
         }
 
-        /* Icono Chat / NEW (abajo centro) */
-        .gu-icon-chat {
-            bottom: 100px;
-            left: 600px;
+        .gu-card:hover {
+            background: rgba(255, 255, 255, 0.85);
+            transform: translateY(-3px);
+            border-color: var(--rebirth-red);
         }
 
-        /* Icono Perfil / NEW (abajo izquierda) */
-        .gu-icon-profile {
-            bottom: 100px;
-            left: 100px;
+        .gu-card-title {
+            font-family: var(--font-gu-title);
+            font-size: 1.05rem;
+            color: var(--rebirth-red);
+            margin-bottom: 8px;
         }
 
+        .gu-card-desc {
+            font-size: 0.9rem;
+            color: var(--rebirth-text-muted);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* --- BOTONES DE INTERFAZ R:2 --- */
+        .gu-btn {
+            background: var(--rebirth-white);
+            color: var(--rebirth-red);
+            border: 1px solid var(--rebirth-red);
+            padding: 8px 16px;
+            font-family: var(--font-gu-title);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .gu-btn:hover {
+            background: var(--rebirth-red);
+            color: var(--rebirth-white);
+            box-shadow: 0 0 10px rgba(143, 12, 42, 0.4);
+        }
+
+        /* --- FOOTER --- */
+        .gu-footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 0.8rem;
+            color: var(--rebirth-text-muted);
+            background: var(--rebirth-bg-gray-dark);
+            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-top: 40px;
+            font-family: var(--font-gu-title);
+            letter-spacing: 1px;
+        }
+
+        /* Responsive móvil */
+        @media (max-width: 768px) {
+            .gu-nav { padding: 15px 20px; }
+            .gu-nav-links { display: none; } /* O simplificado si lo prefieres */
+        }
     </style>
 </head>
 <body>
 
-    <!-- Fondo -->
-    <div class="rebirth-background"></div>
+    <!-- Navegación Superior -->
+    <nav class="gu-nav">
+        <div class="gu-nav-brand">
+            <span class="gu-status-dot"></span> MINE_OS // R:2 PORTFOLIO
+        </div>
+        <div class="gu-nav-links">
+            <a href="index.html" class="active">_Home</a>
+            <a href="#repos">_Repos</a>
+            <a href="#webs">_Webs</a>
+            <a href="blog.html">_Wired_Logs</a>
+            <a href="mailto:rafa004drgb@gmail.com">_Contact</a>
+        </div>
+    </nav>
 
-    <!-- Dial Central -->
-    <div class="gu-main-dial-container">
-        <div class="gu-dial">
-            <div class="gu-dial-arrow"></div>
-            <div class="gu-dial-white-ring">
-                <div class="gu-dial-text">The<br>World</div>
+    <!-- Contenido Principal (CV Virtual / Home) -->
+    <main class="gu-container">
+        
+        <!-- Panel de Presentación / Perfil -->
+        <section class="gu-panel">
+            <div class="gu-panel-header">
+                <h1 class="gu-title">&gt; PROFILE // RASP_USER</h1>
+                <span class="gu-badge">ONLINE</span>
             </div>
-        </div>
-    </div>
+            <p class="gu-text">
+                Bienvenido al nodo personal de <strong>Rafael Álvarez</strong>. Desarrollador Web y entusiasta de la Ciberseguridad / Hacking Ético. Este espacio opera bajo el protocolo de interfaz visual de <em>The World R:2</em>, fusionando la precisión técnica de una terminal con una estructura limpia y optimizada para mostrar proyectos de desarrollo y auditorías.
+            </p>
+            <a href="mailto:rafa004drgb@gmail.com" class="gu-btn">[ Enviar Transmisión / Contacto ]</a>
+        </section>
 
-    <!-- Ventana de Información -->
-    <div class="gu-info-panel">
-        <h1 class="gu-info-title">The World</h1>
-        <p class="gu-info-text">
-            MINE OS offers a creative and comfortable lifestyle for everyone.
-        </p>
-        <span class="gu-info-subtext">Altimit Mine</span>
-        <span class="gu-info-id">MINE OS</span>
-    </div>
+        <!-- Panel de Repositorios & Herramientas -->
+        <section class="gu-panel" id="repos">
+            <div class="gu-panel-header">
+                <h2 class="gu-title">&gt; CONTENT_OS // REPOSITORIES</h2>
+                <span class="gu-badge">GITHUB</span>
+            </div>
+            <p class="gu-text">Herramientas de automatización para auditorías, scripts de reconocimiento y laboratorios de ciberseguridad.</p>
+            
+            <div class="gu-grid">
+                <div class="gu-card">
+                    <h3 class="gu-card-title">Recon.sh (Automated Bug Bounty)</h3>
+                    <p class="gu-card-desc">Script en Bash para encadenar subdominios, validación de hosts vivos, extracción de URLs y análisis con GF/Nuclei.</p>
+                    <a href="https://github.com/Ralvmun04" target="_blank" class="gu-btn">Ver Repositorio &gt;</a>
+                </div>
+                <div class="gu-card">
+                    <h3 class="gu-card-title">Algoritmos de Ordenación en Python</h3>
+                    <p class="gu-card-desc">Implementaciones prácticas y comparativa de rendimiento entre Quick Sort, Merge Sort, Gnome Sort y Bogo Sort.</p>
+                    <a href="blog.html" class="gu-btn">Leer en el Blog &gt;</a>
+                </div>
+            </div>
+        </section>
 
-    <!-- Iconos -->
-    <!-- Herramientas -->
-    <div class="gu-icon-container gu-icon-tools">
-        <div class="gu-icon-circle">
-            <!-- Marcador para el icono -->
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzkwIDExNy45MWMtMjAuMS04Ljg2LTM1LjY4LTI3LjQ2LTQwLjMzLTUwLjg0TDM0OC40NCA1NC45NWM4Ljk5LTguOTggMTcuOTgtMTcuOTcgMjYuOTYtMjYuOTYtNC4wNS00LjA1LTguMTEtOC4xMS0xMi4xNi0xMi4xNi0xNS41MyAxNS41Mi0zMS4wNiAzMS4wNS00Ni41OSA0Ni41OC00LjkxLTIuMTItOS44My00LjI0LTE0Ljc0LTYuMzZMODYuNDEgMzc4Ljg4Yzk5Ljg2IDk5Ljg2IDE5OS43MSAxOTkuNzEgMjk5LjU3IDI5OS41N0wzOTAuMDYgMjE3Ljkxek0xNTEuNjQgMzE1LjI1Yy00LjUtNC41LTguOTktOC45OS0xMy40OS0xMy40OS05LjM5IDkuMzktMTguNzkgMTguNzgtMjguMTggMjguMThMTEwIDM5Mi43OGM4Ljk5LTguOTkgMTcuOTgtMTcuOTcgMjYuOTYtMjYuOTZsNjEuMDMtNjEuMDN6TTQ2My45IDM3NS45NGMtNi4wOC02LjA4LTEyLjE2LTEyLjE2LTE4LjIzLTE4LjI0TDUwMS4zNiA0NTQuOTVjNC4wNSA0LjA1IDguMTEgOC4xMSAxMi4xNiAxMi4xNi04Ljk5LTguOTktMTcuOTctMTcuOTctMjYuOTYtMjYuOTZ6TTE2My45NiA0MzEuMzJjNC4wNSA0LjA1IDguMTEgOC4xMSAxMi4xNiAxMi4xNi04Ljk5LTguOTktMTcuOTctMTcuOTctMjYuOTYtMjYuOTZ6Ii8+PC9zdmc+" class="gu-icon-image" alt="Tools">
-        </div>
-    </div>
+        <!-- Panel de Proyectos Web Comerciales -->
+        <section class="gu-panel" id="webs">
+            <div class="gu-panel-header">
+                <h2 class="gu-title">&gt; WEB_DEPLOY // FREELANCE</h2>
+                <span class="gu-badge">COMMERCIAL</span>
+            </div>
+            <p class="gu-text">Desarrollos web adaptados a clientes, optimizados para velocidad, diseño responsivo y total legibilidad.</p>
+            
+            <div class="gu-grid">
+                <div class="gu-card">
+                    <h3 class="gu-card-title">Portafolio Híbrido Ciberseguridad</h3>
+                    <p class="gu-card-desc">Diseño web modular con estética de terminal adaptado a interfaces de ciencia ficción, desarrollado en HTML5 y CSS3 puro.</p>
+                    <a href="index.html" class="gu-btn">Ver Proyecto &gt;</a>
+                </div>
+            </div>
+        </section>
 
-    <!-- Película / NEW -->
-    <div class="gu-icon-container gu-icon-film">
-        <span class="gu-label-new">NEW</span>
-        <div class="gu-icon-circle">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNNDI5LjkxIDU5LjQyTDI1NiAyMzMuMzMgODUuMTEgNTkuNDIgOTAuMTEgNDU0Ljk1IDI1NiAyODEuMDYgNDIxLjkgNDU0Ljk1ek0yNTYgNTkuNDJMNjYuMzggNDU0Ljk1bDE4OS42Mi0xOTkuMTNsMTg5LjYyIDE5OS4xM3oiLz48L3N2Zy4+" class="gu-icon-image" alt="Film">
-        </div>
-    </div>
+    </main>
 
-    <!-- Katana -->
-    <div class="gu-icon-container gu-icon-katana">
-        <div class="gu-icon-circle">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNOTQuNjIgOTQuNjJMNDU0Ljk1IDQ1NC45NU0xNzYuMzkgMTc2LjM5TDI5MC44MiAyOTAuODJNOTQuNjIgMzI0LjgyTDMyNC44MiA5NC42Mk0xNzYuMzkgMzM4Ljg4TDMyNC44MiA0MTIuOTlNMjk4LjM4IDM2My45TDQ1NC45NSA0NTQuOTUiLz48L3N2Zy4+" class="gu-icon-image" alt="Katana">
-        </div>
-    </div>
-
-    <!-- Correo / NEW -->
-    <div class="gu-icon-container gu-icon-mail">
-        <span class="gu-label-new">NEW</span>
-        <div class="gu-icon-circle">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDU5LjQyTDEwOS40NSAxOTMuMDRsMjkwLjY1IDEwNy4xek04NS4xMSA0NDUuNTZsMTcwLjY1LTEyNi43M2w5NS4zMSAxMDEuNDN6TTEwOS40NSAxOTMuMDNsMTUzLjkxIDIwMS4xMkwzODUuODkgMjk0LjE0ek04NS4xMSAzNzUuOTRMOTIuODkgMTU0Ljk1bDEwNy4xIDI5MC42NXpNMzgyLjMzIDMxNC43N2wtMTA3LjEgMjkwLjY1TDQ1NC45NSA0MjEuOXpNMzgyLjMzIDI3MS45TDMwNC40NSA1NC45NUw0MjEuOQAzNzUuOTR6TTEwMC40NSAzMTQuNzdsMTczLjg5IDI3NC42OEw4NS4xMSA0MjEuOXpNNTAxLjM2IDUzLjM4TDQwMS4zNSAyMzMuMzNsMTU3LjkgMTkyLjN6Ii8+PC9zdmc+" class="gu-icon-image" alt="Mail">
-        </div>
-    </div>
+    <!-- Pie de página -->
+    <footer class="gu-footer">
+        CC2 // ALTIMIT MINE OS - PORTFOLIO SYSTEM V1.0 // SAN FERNANDO
+    </footer>
 
 </body>
 </html>
