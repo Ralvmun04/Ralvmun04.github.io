@@ -38,6 +38,21 @@
             </blockquote>
         </header>
 
+        <!-- Terminal Interactiva Integrada -->
+        <div class="terminal-box">
+            <div class="terminal-header">
+                <span class="terminal-title">&gt; guest@ralvmun04-node:~#</span>
+                <span class="terminal-dots">● ● ●</span>
+            </div>
+            <div class="terminal-body" id="terminalOutput">
+                <p class="terminal-welcome">Bienvenido a la terminal interactiva. Escribe <span class="highlight">"help"</span> para ver los comandos disponibles.</p>
+            </div>
+            <div class="terminal-input-line">
+                <span class="prompt">&gt;</span>
+                <input type="text" id="terminalInput" placeholder="Escribe un comando..." autocomplete="off" spellcheck="false">
+            </div>
+        </div>
+
         <section id="repos" class="grid-layout">
             
             <div class="column">
@@ -129,6 +144,72 @@
             navLinks.classList.toggle('open');
         });
     </script>
+
+    <script>
+    const inputField = document.getElementById('terminalInput');
+    const outputContainer = document.getElementById('terminalOutput');
+
+    inputField.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const command = inputField.value.trim().toLowerCase();
+            
+            // Mostrar el comando introducido por el usuario
+            const userCommandP = document.createElement('p');
+            userCommandP.innerHTML = `<span style="color: var(--neon-green);">&gt;</span> ${escapeHtml(inputField.value)}`;
+            outputContainer.appendChild(userCommandP);
+
+            // Procesar la respuesta del comando
+            const responseP = document.createElement('p');
+            responseP.classList.add('terminal-response');
+
+            switch (command) {
+                case 'help':
+                    responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.";
+                    break;
+                case 'whoami':
+                    responseP.innerText = "Rafael Álvarez // Desarrollador Web & Entusiasta de la Ciberseguridad / Hacking Ético.";
+                    break;
+                case 'skills':
+                    responseP.innerText = "Stack: Python, Bash, HTML5/CSS3, JavaScript, Linux, Git, Reverse Engineering (pwnable.kr).";
+                    break;
+                case 'projects':
+                    responseP.innerHTML = "Repositorios clave:<br>- Recon.sh (Automatización Bug Bounty)<br>- Algoritmos de Ordenación en Python<br>- Writeups de Pwnable";
+                    break;
+                case 'contact':
+                    responseP.innerHTML = "Correo: <a href='mailto:rafa004drgb@gmail.com' style='color: var(--neon-green);'>rafa004drgb@gmail.com</a><br>GitHub: <a href='https://github.com/Ralvmun04' target='_blank' style='color: var(--neon-green);'>github.com/Ralvmun04</a>";
+                    break;
+                case 'clear':
+                    outputContainer.innerHTML = '';
+                    inputField.value = '';
+                    return;
+                case 'sudo rm -rf /':
+                    responseP.classList.add('terminal-error');
+                    responseP.innerText = "Nice try! Permiso denegado. Este nodo está protegido.";
+                    break;
+                case '':
+                    responseP.innerText = "";
+                    break;
+                default:
+                    responseP.classList.add('terminal-error');
+                    responseP.innerText = `Comando no reconocido: "${command}". Escribe "help" para ver los comandos válidos.`;
+                    break;
+            }
+
+            if (command !== '') {
+                outputContainer.appendChild(responseP);
+            }
+
+            // Limpiar input y hacer scroll automático al final
+            inputField.value = '';
+            outputContainer.scrollTop = outputContainer.scrollHeight;
+        }
+    });
+
+    // Función auxiliar para seguridad básica de texto
+    function escapeHtml(text) {
+        return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+</script>
 
 </body>
 </html>
