@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>.hack//The World - Test Interface</title>
+    
+    <!-- Fuentes de Google Fonts (Orbitron y Exo 2) -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- ESTILOS EXCLUSIVOS .hack//G.U. REBIRTH --- */
+        :root {
+            --gu-bg-dark: #020609;
+            --gu-cyan-bright: #00e5ff;
+            --gu-cyan-muted: rgba(0, 229, 255, 0.4);
+            --gu-text-primary: #ffffff;
+            --gu-text-muted: #8ba0b0;
+            --gu-glass-bg: rgba(10, 25, 35, 0.65);
+            --gu-glass-border: rgba(0, 229, 255, 0.35);
+            --font-gu-title: 'Orbitron', sans-serif;
+            --font-gu-body: 'Exo 2', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--gu-bg-dark);
+            color: var(--gu-text-primary);
+            font-family: var(--font-gu-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo radial ambiental similar al sistema de The World */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 30%, rgba(0, 229, 255, 0.05) 0%, rgba(2, 6, 9, 0.9) 80%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Barra de navegación superior geométrica */
+        .gu-nav {
+            background: var(--gu-glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gu-cyan-bright);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            animation: guPanelEntrance 0.4s ease-out forwards;
+        }
+
+        .gu-nav-brand {
+            font-family: var(--font-gu-title);
+            font-size: 1rem;
+            color: var(--gu-cyan-bright);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gu-status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gu-cyan-bright);
+            box-shadow: 0 0 8px var(--gu-cyan-bright);
+            border-radius: 50%;
+        }
+
+        .gu-nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .gu-nav-links a {
+            font-family: var(--font-gu-title);
+            font-size: 0.85rem;
+            text-decoration: none;
+            color: var(--gu-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s ease;
+        }
+
+        .gu-nav-links a:hover, .gu-nav-links a.active {
+            color: var(--gu-cyan-bright);
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+        }
+
+        /* Contenedor Principal */
+        .gu-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            width: 100%;
+            flex: 1;
+        }
+
+        /* Ventanas flotantes / Paneles de cristal */
+        .gu-panel {
+            background: var(--gu-glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--gu-glass-border);
+            border-radius: 3px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: inset 0 0 15px rgba(0, 229, 255, 0.08),
+                        0 8px 25px rgba(0, 0, 0, 0.6);
+            animation: guPanelEntrance 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .gu-panel:nth-child(1) { animation-delay: 0.1s; }
+        .gu-panel:nth-child(2) { animation-delay: 0.25s; }
+
+        .gu-title {
+            font-family: var(--font-gu-title);
+            font-size: 1.4rem;
+            color: var(--gu-text-primary);
+            margin-bottom: 15px;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 3px solid var(--gu-cyan-bright);
+            padding-left: 10px;
+        }
+
+        .gu-text {
+            color: var(--gu-text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Botón estilo interfaz R:2 */
+        .gu-btn {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--gu-cyan-bright);
+            border: 1px solid var(--gu-cyan-bright);
+            padding: 8px 18px;
+            font-family: var(--font-gu-title);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .gu-btn:hover {
+            background: var(--gu-cyan-bright);
+            color: var(--gu-bg-dark);
+            box-shadow: 0 0 12px var(--gu-cyan-bright);
+        }
+
+        /* Animación de aparición de paneles */
+        @keyframes guPanelEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Pie de página */
+        .gu-footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--gu-text-muted);
+            border-top: 1px solid rgba(0, 229, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navegación del Sistema R:2 -->
+    <nav class="gu-nav">
+        <div class="gu-nav-brand">
+            <span class="gu-status-dot"></span> THE WORLD // R:2 SYSTEM
+        </div>
+        <div class="gu-nav-links">
+            <a href="#" class="active">_Desktop</a>
+            <a href="index.html">_Return_Home</a>
+        </div>
+    </nav>
+
+    <!-- Contenido -->
+    <main class="gu-container">
+        
+        <section class="gu-panel">
+            <h1 class="gu-title">&gt; SYSTEM_NOTIFICATION</h1>
+            <p class="gu-text">
+                Interfaz de prueba inspirada en el sistema operativo <strong>.hack//G.U. Rebirth (The World R:2)</strong>. Este diseño prioriza el uso de paneles translúcidos (glassmorphism), tipografías geométricas futuristas y una paleta de colores basada en tonos cianes limpios.
+            </p>
+            <a href="#" class="gu-btn">[ Inicializar Módulo ]</a>
+        </section>
+
+        <section class="gu-panel">
+            <h2 class="gu-title">&gt; AREA_CHARACTERISTICS</h2>
+            <p class="gu-text">
+                Los elementos interactivos responden con destellos de luz de neón cian, imitando los menús de selección de personajes y gestión de datos que utilizaba Haseo en el juego.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="gu-footer">
+        CC2 // .hack//G.U. Project Simulation Node
+    </footer>
+
+</body>
+</html>
