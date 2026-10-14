@@ -431,7 +431,9 @@ h1 {
     font-size: 0.9rem;
 }
 
-/* Bloques de código tipo terminal */
+/* --- BLOQUES DE CÓDIGO DEL BLOG (CORREGIDOS) --- */
+
+/* Código en línea (dentro de un párrafo) */
 code {
     background: rgba(0, 0, 0, 0.5);
     color: var(--neon-green);
@@ -441,20 +443,21 @@ code {
     font-size: 0.85rem;
 }
 
-/* Contenedor general del bloque de código con scroll */
+/* Contenedor principal de los bloques de código con scroll */
 .code-container {
-    background: #030604;
-    border: 1px solid var(--border-color);
+    background: #040805; /* Fondo oscuro sólido para que resalte */
+    border: 1px solid var(--border-color, #1f3a24);
     border-radius: 4px;
-    margin: 15px 0;
+    margin: 20px 0;
     overflow: hidden;
     font-family: var(--font-mono);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
-/* Cabecera del bloque de código */
+/* Cabecera opcional del bloque de código */
 .code-header {
     background: rgba(0, 255, 102, 0.05);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color, #1f3a24);
     padding: 6px 12px;
     display: flex;
     justify-content: space-between;
@@ -467,21 +470,20 @@ code {
     color: #888;
 }
 
-/* Caja con desplazamiento vertical para que no ocupe toda la pantalla */
+/* Caja con desplazamiento vertical para códigos largos */
 .code-scroll-box {
-    max-height: 320px;
+    max-height: 350px;
     overflow-y: auto;
     overflow-x: auto;
-    padding: 12px;
+    padding: 15px;
 }
 
-/* Estilo del bloque de código */
+/* Estilo del bloque interno */
 .code-block {
     background: transparent;
     border: none;
     padding: 0;
     margin: 0;
-    overflow-x: visible;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     color: #d4f8d3;
@@ -501,11 +503,11 @@ code {
 }
 
 .code-scroll-box::-webkit-scrollbar-track {
-    background: #030604;
+    background: #040805;
 }
 
 .code-scroll-box::-webkit-scrollbar-thumb {
-    background: var(--border-color);
+    background: var(--border-color, #1f3a24);
     border-radius: 3px;
 }
 
