@@ -441,18 +441,76 @@ code {
     font-size: 0.85rem;
 }
 
-.code-block {
+/* Contenedor general del bloque de código con scroll */
+.code-container {
     background: #030604;
     border: 1px solid var(--border-color);
-    padding: 12px;
     border-radius: 4px;
+    margin: 15px 0;
+    overflow: hidden;
+    font-family: var(--font-mono);
+}
+
+/* Cabecera del bloque de código */
+.code-header {
+    background: rgba(0, 255, 102, 0.05);
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--neon-green);
+}
+
+.code-lang {
+    color: #888;
+}
+
+/* Caja con desplazamiento vertical para que no ocupe toda la pantalla */
+.code-scroll-box {
+    max-height: 320px;
+    overflow-y: auto;
     overflow-x: auto;
-    margin: 12px 0;
+    padding: 12px;
+}
+
+/* Estilo del bloque de código */
+.code-block {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    overflow-x: visible;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: #d4f8d3;
+    white-space: pre;
 }
 
 .code-block code {
     background: transparent;
     padding: 0;
+    color: inherit;
+}
+
+/* Personalización de la barra de desplazamiento */
+.code-scroll-box::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.code-scroll-box::-webkit-scrollbar-track {
+    background: #030604;
+}
+
+.code-scroll-box::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.code-scroll-box::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-green);
 }
 
 .blog-footer-link {
