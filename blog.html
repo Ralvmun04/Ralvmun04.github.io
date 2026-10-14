@@ -515,7 +515,8 @@
                     </p>
                     
 
-                    <pre class="code-block"><code>def quick_sort(arr):
+                    <pre class="code-block"><code>
+                        def quick_sort(arr):
                         if len(arr) <= 1:
                             return arr
                         pivot = arr[len(arr) // 2]
@@ -529,7 +530,8 @@
                         Aunque ineficientes para grandes volúmenes de datos, son excelentes para entender la mecánica de iteración. <strong>Bubble Sort</strong> compara elementos adyacentes de forma continua, mientras que <strong>Gnome Sort</strong> (inspirado en cómo un gnomo de jardín ordena sus macetas) avanza mientras todo esté en orden, pero si encuentra un elemento desordenado, retrocede iterativamente intercambiándolo hasta colocarlo en su posición correcta.
                     </p>
 
-                    <pre class="code-block"><code>def gnome_sort(arr):
+                    <pre class="code-block"><code>
+                        def gnome_sort(arr):
                         index = 0
                         while index < len(arr):
                             if index == 0 or arr[index] >= arr[index - 1]:
@@ -545,7 +547,8 @@
                     </p>
 
 
-                    <pre class="code-block"><code>import random
+                    <pre class="code-block"><code>
+                    import random
 
                     def is_sorted(arr):
                         return all(arr[i] <= arr[i + 1] for i in range(len(arr) - 1))
@@ -600,7 +603,8 @@
                     </p>
 
 
-                    <pre class="code-block"><code>#!/bin/bash
+                    <pre class="code-block"><code>
+                    #!/bin/bash
 
                     # Creamos un nombre de carpeta único con fecha y hora
                     SESSION_DIR="recon_$(date +%Y%m%d_%H%M)"
