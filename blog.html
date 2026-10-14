@@ -40,12 +40,40 @@
         <!-- Lista de Entradas del Blog -->
         <section class="blog-list">
 
+            <article class="blog-card">
+                <div class="blog-card-header">
+                    <span class="blog-date">[2026-10-05]</span>
+                    <span class="status-tag dev">BOTNET</span>
+                </div>
+                <h2 class="blog-title">BOTNET Simple y Church of Malware</h2>
+                <div class="blog-content">
+                    <p>
+                        Navegando por la red hace un tiempo encontré una página realmente interesante, <a href="https://churchofmalware.org/" target="_blank" rel="noopener noreferrer">Church of Malware</a>, una organización sin ánimo de lucro enfocada en la investigación libre de ciberseguridad ofensiva y educación en seguridad, la cual hacía mucho hincapié en el análisis de códigos maliciosos y en entender el control de internet desde la perspectiva del consumidor. Me pareció un proyecto fascinante y te recomiendo echarle un vistazo.
+                    </p>
+                    <p>
+                        <img src="churchofmalware.png" alt="Church of Malware Screenshot" style="max-width: 100%; border-radius: 4px; margin-top: 10px;" />
+                    </p>
+                    <p>
+                        Investigando en esta plataforma encontré referencias y fragmentos de código de distintos tipos de malware, como gusanos, ransomware, crypto miners, o lo que más llamó mi atención: una botnet rudimentaria basada en Discord.
+                    </p>
+                    <pre class="code-block"><code>
+
+                    </code></pre>
+                    <p>
+                        Este script es un bot de Discord malicioso diseñado para funcionar como una botnet, es decir, un conjunto de sistemas controlados de forma remota para lanzar ataques de denegación de servicio (DDoS). Utiliza comandos de chat para que los atacantes puedan inundar sitios web o direcciones IP con tráfico masivo, ya sea a nivel de aplicación web (Capa 7 con peticiones HTTP) o a nivel de red (Capa 4 con paquetes UDP), buscando saturar los recursos del objetivo.
+                    </p>
+                    <p>
+                        Técnicamente, el código aprovecha librerías como <em>discord.py</em> para escuchar órdenes y <em>aiohttp</em> junto a <em>socket</em> para generar el tráfico concurrente. Además, incluye un módulo automatizado que extrae y verifica listas de proxies públicos en tiempo real desde repositorios externos para ocultar el origen de los ataques, junto con una función de autorreinicio <em>(restart)</em> que le permite descargar e instalar actualizaciones de código desde un servidor remoto de comando y control (C2).
+                    </p>
+                </div>
+            </article>            
+
             <!-- Entrada 1 -->
-<!-- Entrada: Algoritmos de ordenación en Python -->
+            <!-- Entrada: Algoritmos de ordenación en Python -->
             <article class="blog-card">
                 <div class="blog-card-header">
                     <span class="blog-date">[2026-10-07]</span>
-                    <span class="status-tag live">PYTHON</span>
+                    <span class="status-tag dev">PYTHON</span>
                 </div>
                 <h2 class="blog-title">Explorando Algoritmos de Ordenación en Python: Del $O(n \log n)$ al Caos del Bogo Sort</h2>
                 <div class="blog-content">
