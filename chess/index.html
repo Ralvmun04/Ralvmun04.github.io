@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wired // Chess Coordinate Trainer</title>
+    <link rel="icon" type="image/png" href="../lain.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #040805;
+            --card-bg: #080f0a;
+            --border-color: #1f3a24;
+            --neon-green: #00ff66;
+            --text-main: #d4f8d3;
+            --text-muted: #888;
+            --square-light: #b5c0b1;
+            --square-dark: #3b533d;
+            --danger-red: #ff5555;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Enlace para volver a la raíz */
+        .back-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: var(--neon-green);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: opacity 0.2s ease;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            max-width: 600px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        header {
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--neon-green);
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .sub-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Panel de Target & Stats */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        .target-box {
+            background: rgba(0, 255, 102, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .target-box .stat-value {
+            font-size: 1.8rem;
+            color: var(--neon-green);
+        }
+
+        /* Contenedor del Tablero con Borde de Coordenadas */
+        .board-wrapper {
+            position: relative;
+            display: grid;
+            grid-template-columns: 20px 1fr 20px;
+            grid-template-rows: 20px 1fr 20px;
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 1;
+            user-select: none;
+        }
+
+        .coords-row {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            align-items: center;
+            justify-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .coords-col {
+            display: grid;
+            grid-template-rows: repeat(8, 1fr);
+            align-items: center;
+            justify-items: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: bold;
+        }
+
+        .chessboard {
+            grid-area: 2 / 2 / 3 / 3;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.15s ease;
+        }
+
+        .square.light {
+            background-color: var(--square-light);
+        }
+
+        .square.dark {
+            background-color: var(--square-dark);
+        }
+
+        /* Efectos visuales de acierto y fallo */
+        .square.correct {
+            background-color: var(--neon-green) !important;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .square.wrong {
+            background-color: var(--danger-red) !important;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Controles inferiores */
+        .controls {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .btn {
+            flex: 1;
+            background: #080f0a;
+            color: var(--neon-green);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 102, 0.15);
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            background: #080f0a;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            .board-wrapper {
+                grid-template-columns: 15px 1fr 15px;
+                grid-template-rows: 15px 1fr 15px;
+            }
+
+            .coords-row, .coords-col {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../" class="back-link">&lt; /home</a>
+
+    <div class="container">
+        <header>
+            <h1>CHESS_COORDS // v1.0</h1>
+            <p class="sub-title">Entrenador de coordenadas de ajedrez rápido</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="stat-box">
+                <span class="stat-label">TIEMPO</span>
+                <span class="stat-value" id="timer">30s</span>
+            </div>
+            <div class="stat-box target-box">
+                <span class="stat-label">CASILLA</span>
+                <span class="stat-value" id="targetCoord">--</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">PUNTOS</span>
+                <span class="stat-value" id="score">0 / 0</span>
+            </div>
+        </div>
+
+        <div class="board-wrapper">
+            <!-- Coordenadas Superiores e Inferiores -->
+            <div class="coords-row" style="grid-area: 1 / 2 / 2 / 3;" id="topCoords"></div>
+            <div class="coords-row" style="grid-area: 3 / 2 / 4 / 3;" id="bottomCoords"></div>
+            
+            <!-- Coordenadas Izquierda y Derecha -->
+            <div class="coords-col" style="grid-area: 2 / 1 / 3 / 2;" id="leftCoords"></div>
+            <div class="coords-col" style="grid-area: 2 / 3 / 3 / 4;" id="rightCoords"></div>
+
+            <!-- Tablero de Ajedrez -->
+            <div class="chessboard" id="chessboard"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="startBtn
