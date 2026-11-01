@@ -285,4 +285,164 @@
         </div>
 
         <div class="controls">
-            <button class="btn" id="startBtn
+            <button class="btn" id="startBtn">INICIAR (30s)</button>
+            <button class="btn" id="flipBtn">VISTA: BLANCAS</button>
+        </div>
+    </div>
+
+    <script>
+        const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+
+        let currentOrientation = 'white'; // 'white' u 'black'
+        let currentTarget = '';
+        let hits = 0;
+        let attempts = 0;
+        let timeLeft = 30;
+        let timerInterval = null;
+        let isPlaying = false;
+
+        // Elementos del DOM
+        const chessboard = document.getElementById('chessboard');
+        const targetDisplay = document.getElementById('targetCoord');
+        const timerDisplay = document.getElementById('timer');
+        const scoreDisplay = document.getElementById('score');
+        const startBtn = document.getElementById('startBtn');
+        const flipBtn = document.getElementById('flipBtn');
+
+        const topCoords = document.getElementById('topCoords');
+        const bottomCoords = document.getElementById('bottomCoords');
+        const leftCoords = document.getElementById('leftCoords');
+        const rightCoords = document.getElementById('rightCoords');
+
+        // Renderizar el tablero y las coordenadas según la orientación
+        function createBoard() {
+            chessboard.innerHTML = '';
+            
+            const currentFiles = currentOrientation === 'white' ? [...files] : [...files].reverse();
+            const currentRanks = currentOrientation === 'white' ? [...ranks] : [...ranks].reverse();
+
+            // Renderizar coordenadas de borde
+            topCoords.innerHTML = currentFiles.map(f => `<span>${f}</span>`).join('');
+            bottomCoords.innerHTML = currentFiles.map(f => `<span>${f}</span>`).join('');
+            leftCoords.innerHTML = currentRanks.map(r => `<span>${r}</span>`).join('');
+            rightCoords.innerHTML = currentRanks.map(r => `<span>${r}</span>`).join('');
+
+            // Crear las 64 casillas
+            for (let r = 0; r < 8; r++) {
+                for (let f = 0; f < 8; f++) {
+                    const file = currentFiles[f];
+                    const rank = currentRanks[r];
+                    const coord = `${file}${rank}`;
+
+                    const square = document.createElement('div');
+                    square.classList.add('square');
+
+                    // Cálculo del color de la casilla (clara/oscura)
+                    const fileIndex = files.indexOf(file);
+                    const rankIndex = ranks.indexOf(rank);
+                    const isLight = (fileIndex + rankIndex) % 2 === 0;
+
+                    square.classList.add(isLight ? 'light' : 'dark');
+                    square.dataset.coord = coord;
+
+                    square.addEventListener('click', () => handleSquareClick(coord, square));
+                    chessboard.appendChild(square);
+                }
+            }
+        }
+
+        // Generar nueva coordenada objetivo
+        function generateNewTarget() {
+            let newTarget;
+            do {
+                const randomFile = files[Math.floor(Math.random() * files.length)];
+                const randomRank = ranks[Math.floor(Math.random() * ranks.length)];
+                newTarget = `${randomFile}${randomRank}`;
+            } while (newTarget === currentTarget);
+
+            currentTarget = newTarget;
+            targetDisplay.innerText = currentTarget;
+        }
+
+        // Manejar el clic en una casilla
+        function handleSquareClick(coord, squareElement) {
+            if (!isPlaying) return;
+
+            attempts++;
+            if (coord === currentTarget) {
+                hits++;
+                flashSquare(squareElement, 'correct');
+                generateNewTarget();
+            } else {
+                flashSquare(squareElement, 'wrong');
+                // Resaltar brevemente la casilla correcta para aprender del fallo
+                const correctSquare = Array.from(document.querySelectorAll('.square')).find(s => s.dataset.coord === currentTarget);
+                if (correctSquare) {
+                    flashSquare(correctSquare, 'correct');
+                }
+            }
+
+            updateScore();
+        }
+
+        // Efecto visual rápido de acierto / error
+        function flashSquare(element, className) {
+            element.classList.add(className);
+            setTimeout(() => {
+                element.classList.remove(className);
+            }, 250);
+        }
+
+        // Actualizar estadísticas de aciertos
+        function updateScore() {
+            scoreDisplay.innerText = `${hits} / ${attempts}`;
+        }
+
+        // Iniciar / Reiniciar partida
+        function startGame() {
+            hits = 0;
+            attempts = 0;
+            timeLeft = 30;
+            isPlaying = true;
+
+            updateScore();
+            timerDisplay.innerText = `${timeLeft}s`;
+            startBtn.innerText = "REINICIAR";
+
+            clearInterval(timerInterval);
+            generateNewTarget();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.innerText = `${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Fin del tiempo
+        function endGame() {
+            clearInterval(timerInterval);
+            isPlaying = false;
+            targetDisplay.innerText = "--";
+            startBtn.innerText = "INICIAR (30s)";
+            alert(`¡Tiempo agotado!\n\nResultado final:\nAciertos: ${hits}\nTotal de clics: ${attempts}\nPrecisión: ${attempts > 0 ? Math.round((hits / attempts) * 100) : 0}%`);
+        }
+
+        // Alternar perspectiva (Blancas/Negras)
+        flipBtn.addEventListener('click', () => {
+            currentOrientation = currentOrientation === 'white' ? 'black' : 'white';
+            flipBtn.innerText = `VISTA: ${currentOrientation === 'white' ? 'BLANCAS' : 'NEGRAS'}`;
+            createBoard();
+        });
+
+        startBtn.addEventListener('click', startGame);
+
+        // Inicialización básica
+        createBoard();
+    </script>
+</body>
+</html>
