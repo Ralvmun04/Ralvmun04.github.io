@@ -6,25 +6,26 @@
     <title>Wired // Cyber Utilities & Tools</title>
     <link rel="icon" type="image/png" href="../lain.png">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <a href="../" class="back-link">&lt; /home</a>
 
+    <!-- CONTENEDOR 1: HERRAMIENTAS CRIPTOGRÁFICAS Y DE CODIFICACIÓN -->
     <div class="container">
         <header>
             <h1>// WIRED_UTILS &amp; CRYPTO</h1>
-            <p class="sub-title">Caja de herramientas de seguridad ejecutadas en cliente</p>
+            <p class="sub-title">Herramientas de análisis y codificación en cliente</p>
         </header>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab(event, 'hash')">SHA-256 &amp; Pass</button>
+            <button class="tab-btn active" onclick="switchTab(event, 'hash')">SHA-256 Hash</button>
             <button class="tab-btn" onclick="switchTab(event, 'base64')">Base64 Codec</button>
             <button class="tab-btn" onclick="switchTab(event, 'xor')">XOR Cipher</button>
         </div>
 
-        <!-- HERRAMIENTA 1: HASH Y CONTRASEÑAS -->
+        <!-- HERRAMIENTA 1: HASH SHA-256 -->
         <div id="hash" class="tool-panel active">
             <div class="input-group">
                 <label>Texto a calcular Hash (SHA-256):</label>
@@ -33,17 +34,6 @@
             <div class="input-group">
                 <label>Hash SHA-256 resultante:</label>
                 <div class="output-box" id="hashOutput">--</div>
-            </div>
-            <hr class="divider">
-            <div class="input-group">
-                <label>Generador de Contraseña Segura:</label>
-                <div class="row">
-                    <button class="btn full-width" onclick="generatePassword()">Generar Password</button>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Contraseña generada:</label>
-                <div class="output-box" id="passOutput">--</div>
             </div>
         </div>
 
@@ -83,6 +73,40 @@
         </div>
     </div>
 
+    <!-- CONTENEDOR 2: GENERADOR DE CONTRASEÑAS INDEPENDIENTE -->
+    <div class="container">
+        <header>
+            <h2>// PASS_GEN_MODULE</h2>
+            <p class="sub-title">Generador de claves y PINs de alta entropía</p>
+        </header>
+
+        <div class="input-group">
+            <div class="slider-header">
+                <label for="passLength">Longitud de caracteres:</label>
+                <span class="length-badge" id="lengthDisplay">16</span>
+            </div>
+            <input type="range" id="passLength" min="4" max="32" value="16" oninput="updateLengthDisplay()">
+        </div>
+
+        <div class="radio-group">
+            <label class="radio-card">
+                <input type="radio" name="passType" value="alphanumeric" checked>
+                <span>Caracteres aleatorios (A-Z, a-z, 0-9, !@#)</span>
+            </label>
+            <label class="radio-card">
+                <input type="radio" name="passType" value="numeric">
+                <span>Solo numérica / PIN (0-9)</span>
+            </label>
+        </div>
+
+        <button class="btn full-width" onclick="generatePassword()">GENERAR CONTRASEÑA</button>
+
+        <div class="input-group">
+            <label>Contraseña generada:</label>
+            <div class="output-box" id="passOutput">--</div>
+        </div>
+    </div>
+
     <script>
         function switchTab(event, tabId) {
             document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
@@ -103,15 +127,6 @@
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
             document.getElementById('hashOutput').innerText = hashHex;
-        }
-
-        function generatePassword() {
-            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-            let pass = "";
-            for (let i = 0; i < 16; i++) {
-                pass += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            document.getElementById('passOutput').innerText = pass;
         }
 
         function encodeB64() {
@@ -145,6 +160,33 @@
             }
             const hexResult = Array.from(result).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
             document.getElementById('xorOutput').innerText = `Texto: ${result}\nHex: ${hexResult}`;
+        }
+
+        // --- LÓGICA DEL GENERADOR DE CONTRASEÑAS ---
+        function updateLengthDisplay() {
+            const lengthVal = document.getElementById('passLength').value;
+            document.getElementById('lengthDisplay').innerText = lengthVal;
+        }
+
+        function generatePassword() {
+            const length = parseInt(document.getElementById('passLength').value);
+            const type = document.querySelector('input[name="passType"]:checked').value;
+
+            const numericChars = "0123456789";
+            const allChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}";
+
+            const charset = type === 'numeric' ? numericChars : allChars;
+            let pass = "";
+
+            // Usar crypto.getRandomValues para mayor seguridad criptográfica
+            const randomValues = new Uint32Array(length);
+            crypto.getRandomValues(randomValues);
+
+            for (let i = 0; i < length; i++) {
+                pass += charset.charAt(randomValues[i] % charset.length);
+            }
+
+            document.getElementById('passOutput').innerText = pass;
         }
     </script>
 </body>
