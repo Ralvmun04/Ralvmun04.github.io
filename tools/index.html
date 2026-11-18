@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wired // Cyber Utilities & Tools</title>
+    <link rel="icon" type="image/png" href="../lain.png">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <a href="../" class="back-link">&lt; /home</a>
+
+    <div class="container">
+        <header>
+            <h1>// WIRED_UTILS &amp; CRYPTO</h1>
+            <p class="sub-title">Caja de herramientas de seguridad ejecutadas en cliente</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab(event, 'hash')">SHA-256 &amp; Pass</button>
+            <button class="tab-btn" onclick="switchTab(event, 'base64')">Base64 Codec</button>
+            <button class="tab-btn" onclick="switchTab(event, 'xor')">XOR Cipher</button>
+        </div>
+
+        <!-- HERRAMIENTA 1: HASH Y CONTRASEÑAS -->
+        <div id="hash" class="tool-panel active">
+            <div class="input-group">
+                <label>Texto a calcular Hash (SHA-256):</label>
+                <input type="text" id="hashInput" placeholder="Escribe algo..." oninput="calculateHash()">
+            </div>
+            <div class="input-group">
+                <label>Hash SHA-256 resultante:</label>
+                <div class="output-box" id="hashOutput">--</div>
+            </div>
+            <hr class="divider">
+            <div class="input-group">
+                <label>Generador de Contraseña Segura:</label>
+                <div class="row">
+                    <button class="btn full-width" onclick="generatePassword()">Generar Password</button>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Contraseña generada:</label>
+                <div class="output-box" id="passOutput">--</div>
+            </div>
+        </div>
+
+        <!-- HERRAMIENTA 2: BASE64 -->
+        <div id="base64" class="tool-panel">
+            <div class="input-group">
+                <label>Texto de entrada:</label>
+                <textarea id="b64Input" rows="3" placeholder="Texto plano o en Base64..."></textarea>
+            </div>
+            <div class="row">
+                <button class="btn full-width" onclick="encodeB64()">Codificar Base64</button>
+                <button class="btn full-width" onclick="decodeB64()">Decodificar Base64</button>
+            </div>
+            <div class="input-group">
+                <label>Resultado:</label>
+                <div class="output-box" id="b64Output">--</div>
+            </div>
+        </div>
+
+        <!-- HERRAMIENTA 3: CIFRADO XOR -->
+        <div id="xor" class="tool-panel">
+            <div class="input-group">
+                <label>Texto o Payload:</label>
+                <input type="text" id="xorInput" placeholder="Mensaje secreto...">
+            </div>
+            <div class="input-group">
+                <label>Clave XOR (Número entero o caracter):</label>
+                <input type="text" id="xorKey" value="5" placeholder="Clave...">
+            </div>
+            <div class="row">
+                <button class="btn full-width" onclick="applyXor()">Aplicar / Revertir XOR</button>
+            </div>
+            <div class="input-group">
+                <label>Resultado codificado:</label>
+                <div class="output-box" id="xorOutput">--</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabId) {
+            document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        async function calculateHash() {
+            const text = document.getElementById('hashInput').value;
+            if (!text) {
+                document.getElementById('hashOutput').innerText = "--";
+                return;
+            }
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            document.getElementById('hashOutput').innerText = hashHex;
+        }
+
+        function generatePassword() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            let pass = "";
+            for (let i = 0; i < 16; i++) {
+                pass += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('passOutput').innerText = pass;
+        }
+
+        function encodeB64() {
+            try {
+                const val = document.getElementById('b64Input').value;
+                document.getElementById('b64Output').innerText = btoa(val);
+            } catch (e) {
+                document.getElementById('b64Output').innerText = "Error al codificar caracteres especiales.";
+            }
+        }
+
+        function decodeB64() {
+            try {
+                const val = document.getElementById('b64Input').value;
+                document.getElementById('b64Output').innerText = atob(val);
+            } catch (e) {
+                document.getElementById('b64Output').innerText = "Error: El texto no está en un formato Base64 válido.";
+            }
+        }
+
+        function applyXor() {
+            const text = document.getElementById('xorInput').value;
+            const key = document.getElementById('xorKey').value;
+            if (!text || !key) return;
+
+            let result = "";
+            const charKey = key.length === 1 ? key.charCodeAt(0) : parseInt(key) || 5;
+
+            for (let i = 0; i < text.length; i++) {
+                result += String.fromCharCode(text.charCodeAt(i) ^ charKey);
+            }
+            const hexResult = Array.from(result).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+            document.getElementById('xorOutput').innerText = `Texto: ${result}\nHex: ${hexResult}`;
+        }
+    </script>
+</body>
+</html>
