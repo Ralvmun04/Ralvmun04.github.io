@@ -191,6 +191,14 @@
                     case 'help':
                         responseP.innerHTML = "Comandos disponibles:<br>- <b>whoami</b>: Información sobre mí.<br>- <b>skills</b>: Tecnologías y áreas de dominio.<br>- <b>projects</b>: Enlaces a repositorios y herramientas.<br>- <b>contact</b>: Vías de contacto.<br>- <b>clear</b>: Limpia la terminal.<br>- <b>exit</b>: Cierra la ventana.";
                         break;
+                    case 'ls':
+                        responseP.innerHTML = "index.html<br>blog.html";
+                        break;
+                    case 'ls -la':
+                        responseP.innerHTML = "index.html<br>blog.html<br>flag.txt";
+                        break;
+                    case 'cat flag.txt':
+                        resposeP.innerHTML = "Enhorabuena! Has encontrado la flag:<br> ~H4ck3d_by_ElNene04!"
                     case 'whoami':
                         responseP.innerText = "Rafael Álvarez // Desarrollador Multiplataforma & Especialista en Ciberseguridad / Hacking Ético.";
                         break;
